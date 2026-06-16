@@ -11,7 +11,7 @@ import { duration } from 'drizzle-orm/gel-core';
         name: 'KITCHEN_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@localhost:5670'],
+          urls: ['amqp://guest:guest@localhost:5672'],
           queue: "kitchen_queue",
           queueOptions: {duration: false}
         }
