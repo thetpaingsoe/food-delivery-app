@@ -1,6 +1,9 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from "./schema"
+import { ConfigService } from '@nestjs/config';
 
-const sql = neon(process.env.DATABASE_URL!);
-export const db = drizzle(sql, { schema });
+export const createDB = (configService : ConfigService) => {
+    const sql = neon(configService.get<string>('DATABASE_URL')!);
+    return drizzle(sql, {schema});
+}

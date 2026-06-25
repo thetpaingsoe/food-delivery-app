@@ -1,19 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateOrderDto } from './app.controller';
-import { db } from './db/db';
 import { orders } from './db/schema';
+import { DbService } from './db/db.service';
 
 @Injectable()
 export class AppService {
   constructor (
     @Inject("KITCHEN_SERVICE") private readonly kitchenClient : ClientProxy,
+    private readonly dbService: DbService
   ) {
     
   }
 
   async createOrder(dto: CreateOrderDto) {
-    const [order] = await db.insert(orders).values({
+    const [order] = await this.dbService.db.insert(orders).values({
       customerName: dto.customerName,
       item: dto.item,
       quantity: dto.quantity,

@@ -28,7 +28,7 @@ export class AppService {
 
      this.riderClient.emit("order_ready", {
       orderId : data.orderId,
-      customName : data.customerName, 
+      customerName : data.customerName, 
       item: data.item,
      })
 

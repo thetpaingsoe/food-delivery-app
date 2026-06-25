@@ -2,23 +2,43 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { duration } from 'drizzle-orm/gel-core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import Joi from 'joi';
+import { createDB } from './db/db';
+import { DbService } from './db/db.service';
 
 @Module({
   imports: [
-    ClientsModule.register([
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema : Joi.object({
+        DATABASE_URL: Joi.string().required(),
+        PORT: Joi.number().default(3000),
+        RABBITMQ_URL: Joi.string().default('amqp://guest:guest@localhost:5672'),
+        NODE_ENV: Joi.string()
+          .valid('development','production')
+          .default('development')
+      })
+    }),
+    ClientsModule.registerAsync([
       {
         name: 'KITCHEN_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://guest:guest@localhost:5672'],
-          queue: "kitchen_queue",
-          queueOptions: {duration: false}
-        }
+        useFactory: ( configService : ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get<string>('RABBITMQ_URL')!],
+            queue: "kitchen_queue",
+            queueOptions: {durable: false}
+          }
+        }),
+        inject: [ConfigService]
       }
     ])
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    DbService 
+  ],
 })
 export class AppModule {}
