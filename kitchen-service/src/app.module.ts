@@ -2,24 +2,44 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DbService } from './db/db.service';
+import Joi from 'joi';
 
 @Module({
   imports: [
-    ClientsModule.register([
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema : Joi.object({
+        DATABASE_URL: Joi.string().required(),
+        PORT: Joi.number().default(3000),
+        RABBITMQ_URL: Joi.string().default('amqp://guest:guest@localhost:5672'),
+        NODE_ENV: Joi.string()
+          .valid('development', 'production')
+          .default('development')
+      })
+    }),
+    ClientsModule.registerAsync([
       {
         name: "RIDER_SERVICE",
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://guest:guest@localhost:5672'],
-          queue: "rider_queue",
-          queueOptions: {
-            durable: process.env.NODE_ENV === 'production'
+        useFactory: (configService : ConfigService ) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get<string>('RABBITMQ_URL')!],
+            queue: "rider_queue",
+            queueOptions: {
+              durable: configService.get<string>('NODE_ENV') === 'production'
+            }
           }
-        }
+        }),
+        inject: [ConfigService]
       }
     ])
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    DbService
+  ],
 })
 export class AppModule {}

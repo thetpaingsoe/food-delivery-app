@@ -1,12 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { tickets } from './db/schema';
-import { db } from './db/db';
+import { DbService } from './db/db.service';
 
 @Injectable()
 export class AppService {
 
-  constructor(@Inject("RIDER_SERVICE") private readonly riderClient: ClientProxy, ) {}
+  constructor(
+    @Inject("RIDER_SERVICE") private readonly riderClient: ClientProxy, 
+    private readonly dbService: DbService
+  ) {}
   
   async processOrder(data: {
     orderId: string, 
@@ -14,7 +17,7 @@ export class AppService {
     item : string, 
     quantity: number
   }) {
-    const [ticket] = await db.insert(tickets)
+    const [ticket] = await this.dbService.db.insert(tickets)
     .values({
       orderId: data.orderId, 
       customName: data.customerName, 
