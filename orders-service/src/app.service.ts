@@ -9,9 +9,7 @@ export class AppService {
   constructor (
     @Inject("KITCHEN_SERVICE") private readonly kitchenClient : ClientProxy,
     private readonly dbService: DbService
-  ) {
-    
-  }
+  ) {}
 
   async createOrder(dto: CreateOrderDto) {
     const [order] = await this.dbService.db.insert(orders).values({
