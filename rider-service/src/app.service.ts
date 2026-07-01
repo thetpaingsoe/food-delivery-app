@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { db } from './db/db';
+import { DbService } from './db/db.service';
 import { dispatches } from './db/schema';
 
 const RIDERS = ['Mike', 'Alex', 'Joe', 'Bright']
 @Injectable()
 export class AppService {
  
+  constructor(
+    private readonly dbService : DbService
+  ){}
+
   async dispatchRider(data: {
     orderId : string,
     customerName : string, 
@@ -13,7 +17,7 @@ export class AppService {
   }){
     const rider = RIDERS[Math.floor(Math.random() * RIDERS.length)]
 
-    const [dispatch] = await db.insert(
+    const [dispatch] = await this.dbService.db.insert(
       dispatches
     )
     .values({

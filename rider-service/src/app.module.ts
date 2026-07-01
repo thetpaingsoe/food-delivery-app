@@ -1,10 +1,25 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DbService } from './db/db.service';
+import { ConfigModule } from '@nestjs/config';
+import Joi from 'joi';
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        DATABASE_URL : Joi.string().required(),
+        PORT: Joi.number().default(3000),
+        RABBITMQ_URL : Joi.string().default('amqp://guest:guest@localhost:5672'),
+        NODE_ENV: Joi.string()
+          .valid('development', 'production')
+          .default('development')
+      })
+    })
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DbService],
 })
 export class AppModule {}

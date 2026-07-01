@@ -27,7 +27,7 @@ import { DbService } from './db/db.service';
           options: {
             urls: [configService.get<string>('RABBITMQ_URL')!],
             queue: "kitchen_queue",
-            queueOptions: {durable: false}
+            queueOptions: {durable: configService.get<string>('NODE_ENV') === 'production'}
           }
         }),
         inject: [ConfigService]
