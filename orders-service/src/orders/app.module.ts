@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
-import { DbService } from './db/db.service';
+import { DbService } from '../db/db.service';
 
 @Module({
   imports: [

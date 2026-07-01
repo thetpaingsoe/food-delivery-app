@@ -31,11 +31,11 @@ Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 - [x] Create `.env.example` for each service listing all required env vars with placeholder values
 
 ### 1.2 Add `@nestjs/config` with Joi validation
-- [ ] Install `@nestjs/config` + `joi` in all 3 services
-- [ ] Register `ConfigModule.forRoot({ validationSchema })` in each `AppModule`
-- [ ] Define a Joi schema validating: `DATABASE_URL`, `PORT` (orders only), `RABBITMQ_URL`, `NODE_ENV`
-- [ ] Move all `process.env.*` access to `ConfigService` injection
-- [ ] Move RMQ credentials to env vars (stop hardcoding `guest:guest`)
+- [x] Install `@nestjs/config` + `joi` in all 3 services
+- [x] Register `ConfigModule.forRoot({ validationSchema })` in each `AppModule`
+- [x] Define a Joi schema validating: `DATABASE_URL`, `PORT` (orders only), `RABBITMQ_URL`, `NODE_ENV`
+- [x] Move all `process.env.*` access to `ConfigService` injection
+- [x] Move RMQ credentials to env vars (stop hardcoding `guest:guest`)
 
 ### 1.3 Add validation pipe
 - [ ] Install `class-validator` + `class-transformer` in orders-service
@@ -206,13 +206,17 @@ Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 - [ ] All response types in dedicated `interfaces/` or `types/` directories
 
 ### 5.3 Fix and expand tests
-- [ ] Update `app.controller.spec.ts` in all 3 services to test actual endpoints/event handlers
-- [ ] Update `app.e2e-spec.ts` to test real flow:
-  - orders: `POST /orders` returns `{ success: true, orderId }`
-  - kitchen: receives `order_created` event, creates ticket
-  - rider: receives `order_ready` event, creates dispatch
+
+**Feature tests (preferred — like Laravel feature tests, uses supertest):**
+- [ ] Write feature tests for all 3 services:
+  - `orders-service`: `POST /orders` — validates body, returns correct response, rejects bad input
+  - `kitchen-service`: `order_created` handler — verifies ticket creation flow
+  - `rider-service`: `order_ready` handler — verifies dispatch creation flow
+- [ ] Mock DB + RMQ at the module level in feature tests (not real connections)
+
+**Unit tests (optional — for service logic edge cases):**
 - [ ] Add unit tests for service methods with mocked DB + RMQ
-- [ ] Aim for test structure: unit (fast, mocked deps) + e2e (real integration)
+- [ ] Aim for test structure: feature (behavior, survives refactors) + unit (edge cases, faster feedback)
 
 ### 5.4 Add CI/CD pipeline
 - [ ] Create `.github/workflows/ci.yml`:
