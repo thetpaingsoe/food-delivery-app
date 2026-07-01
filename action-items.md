@@ -38,9 +38,9 @@ Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 - [x] Move RMQ credentials to env vars (stop hardcoding `guest:guest`)
 
 ### 1.3 Add validation pipe
-- [ ] Install `class-validator` + `class-transformer` in orders-service
-- [ ] Create `CreateOrderDto` in `src/orders/dto/create-order.dto.ts` with `@IsString()`, `@IsInt()`, `@Min(1)` etc.
-- [ ] Register `ValidationPipe` globally in `orders-service/src/main.ts`
+- [x] Install `class-validator` + `class-transformer` in orders-service
+- [x] Create `CreateOrderDto` in `src/orders/dto/create-order.dto.ts` with `@IsString()`, `@IsInt()`, `@Min(1)` etc.
+- [x] Register `ValidationPipe` globally in `orders-service/src/main.ts`
 
 ### 1.4 Add global exception filter
 - [ ] Create `src/common/filters/all-exceptions.filter.ts` in each service

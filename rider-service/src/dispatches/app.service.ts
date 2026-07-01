@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { DbService } from './db/db.service';
-import { dispatches } from './db/schema';
+import { DbService } from '../db/db.service';
+import { dispatches } from '../db/schema';
 
 const RIDERS = ['Mike', 'Alex', 'Joe', 'Bright']
 @Injectable()

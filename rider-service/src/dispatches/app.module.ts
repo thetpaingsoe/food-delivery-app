@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { DbService } from './db/db.service';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { DbService } from 'src/db/db.service';
 
 @Module({
   imports: [

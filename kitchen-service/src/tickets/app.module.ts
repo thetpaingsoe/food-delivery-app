@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { DbService } from './db/db.service';
 import Joi from 'joi';
+import { AppService } from './app.service';
+import { DbService } from 'src/db/db.service';
 
 @Module({
   imports: [

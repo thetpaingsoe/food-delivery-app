@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { tickets } from './db/schema';
-import { DbService } from './db/db.service';
+import { DbService } from 'src/db/db.service';
+import { tickets } from 'src/db/schema';
 
 @Injectable()
 export class AppService {
