@@ -8,6 +8,13 @@
       "when": 1781532667518,
       "tag": "0000_slimy_revanche",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788015493113,
+      "tag": "0001_jittery_wolf_cub",
+      "breakpoints": true
     }
   ]
 }

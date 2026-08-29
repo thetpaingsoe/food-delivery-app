@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -14,10 +15,18 @@ import { DbService } from '../db/db.service';
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(3000),
         RABBITMQ_URL: Joi.string().default('amqp://guest:guest@localhost:5672'),
+        ITEM_SERVICE_URL: Joi.string().default('http://localhost:3001'),
         NODE_ENV: Joi.string()
-          .valid('development', 'production')
+          .valid('development', 'production', 'test')
           .default('development'),
       }),
+    }),
+    HttpModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        baseURL: configService.get<string>('ITEM_SERVICE_URL'),
+        timeout: 5000,
+      }),
+      inject: [ConfigService],
     }),
     ClientsModule.registerAsync([
       {

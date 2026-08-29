@@ -4,15 +4,21 @@ import {
   varchar,
   timestamp,
   integer,
+  numeric,
 } from 'drizzle-orm/pg-core';
 
 export const orders = pgTable('orders', {
   id: uuid('id').defaultRandom().primaryKey(),
   customerName: varchar('customer_name', { length: 100 }).notNull(),
-  item: varchar('item', { length: 100 }).notNull(),
+  menuItemId: uuid('menu_item_id').notNull(),
+  itemName: varchar('item_name', { length: 255 }).notNull(),
+  itemPrice: numeric('item_price').notNull(),
   quantity: integer('quantity').notNull(),
+  totalPrice: numeric('total_price').notNull(),
+  street: varchar('street', { length: 255 }).notNull(),
+  area: varchar('area', { length: 255 }).notNull(),
   status: varchar('status', { length: 50 }).notNull().default('pending'),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
 
 export type Order = typeof orders.$inferSelect;
