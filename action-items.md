@@ -16,10 +16,10 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `2 / 89 items completed (2%)`
+**Overall:** `5 / 89 items completed (6%)`
 
 ```
-Phase 1 — Foundation       [██░░░░░░░░]  2/21  (10%)
+Phase 1 — Foundation       [███░░░░░░░]  5/21  (24%)
 Phase 2 — Operations       [░░░░░░░░░░]  0/20  (0%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
@@ -30,11 +30,22 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** 1.1 — Verify .env git status + update action items | **Date:** 2026-06-22
+**Last action completed:** 1.1 — Auth-service fully implemented with 15 passing feature tests | **Date:** 2026-08-29
 
 ---
 
 ## Phase 1 — Foundation (Security & Error Handling)
+
+### 1.0 Auth-service (complete)
+- [x] Scaffold `main/auth-service/` with NestJS 11 / TypeScript 5.7 / Drizzle ORM
+- [x] Create DB schema (users table: id, name, email, password_hash, created_at)
+- [x] Implement auth.service.ts (register, login, verifyToken) with bcrypt + @nestjs/jwt
+- [x] Implement auth.controller.ts (POST /auth/register, POST /auth/login, GET /auth/verify)
+- [x] ConfigModule with ignoreEnvFile for test mode
+- [x] ValidationPipe with whitelist, forbidNonWhitelisted, transform
+- [x] DTOs: register.dto.ts (password rules: min 8, uppercase, number, special char), login.dto.ts
+- [x] DB migration (npm run db:generate + db:migrate) — users table in Neon
+- [x] 15 feature tests passing (test/auth.e2e-spec.ts)
 
 ### 1.1 Create .env.example files
 - [x] Verify `.env` is listed in `.gitignore` (confirmed — already done in all 3 services)
