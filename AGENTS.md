@@ -36,13 +36,13 @@ NestJS 11 / TypeScript 5.7 / Drizzle ORM / Neon Postgres / RabbitMQ / Jest + sup
 | Service | Database | Port | Status |
 |---------|----------|------|--------|
 | auth-service | auth_db | 3000 | ✅ Done (tests pass) |
-| item-service | item_db | 3001 | Pending |
+| item-service | item_db | 3001 | ✅ Done |
 | orders-service | orders_db | 3002 | Pending |
 | kitchen-service | kitchen_db | — | Pending |
 | rider-service | rider_db | — | Pending |
 
 ## Current Task
-Phase 1.2 — item-service
+Phase 1 — next service (orders-service, kitchen-service, or rider-service)
 
 ## Conventions
 - Feature tests over unit tests (every change production-ready)

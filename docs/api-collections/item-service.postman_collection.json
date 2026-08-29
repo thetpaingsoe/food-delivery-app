@@ -1,0 +1,197 @@
+{
+  "info": {
+    "name": "Item Service",
+    "description": "Item & Category CRUD — Port 3001",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "GET /categories",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/categories"
+          }
+        },
+        {
+          "name": "POST /categories",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/categories",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Food\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PATCH /categories/:id",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", "{{categoryId}}"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Main Course\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE /categories/:id",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", "{{categoryId}}"]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "item": [
+        {
+          "name": "GET /items",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/items"
+          }
+        },
+        {
+          "name": "GET /items?category_id=",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/items?category_id={{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["items"],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "{{categoryId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /items/:id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/items/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["items", "{{itemId}}"]
+            }
+          }
+        },
+        {
+          "name": "POST /items",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/items",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Pizza\",\n  \"description\": \"Cheesy pizza\",\n  \"price\": 1299,\n  \"categoryId\": \"{{categoryId}}\",\n  \"imageUrl\": \"https://example.com/pizza.jpg\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PATCH /items/:id",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/items/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["items", "{{itemId}}"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Margherita Pizza\",\n  \"price\": 1499\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE /items/:id",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/items/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["items", "{{itemId}}"]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

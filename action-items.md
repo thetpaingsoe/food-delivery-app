@@ -16,10 +16,10 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `5 / 89 items completed (6%)`
+**Overall:** `6 / 89 items completed (7%)`
 
 ```
-Phase 1 — Foundation       [███░░░░░░░]  5/21  (24%)
+Phase 1 — Foundation       [███░░░░░░░]  6/21  (29%)
 Phase 2 — Operations       [░░░░░░░░░░]  0/20  (0%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** 1.1 — Auth-service fully implemented with 15 passing feature tests | **Date:** 2026-08-29
+**Last action completed:** Item-service fully implemented with own database + schema | **Date:** 2026-08-29
 
 ---
 
@@ -52,7 +52,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 - [x] Confirm `.env` files are not tracked by git (confirmed — `git ls-files` shows none tracked)
 - [x] Create `.env.example` for each service listing all required env vars with placeholder values
 - [x] Create auth-service with its own database (users table)
-- [ ] Create item-service with its own database (menu items + categories tables)
+- [x] Create item-service with its own database (menu items + categories tables)
 
 ### 1.2 Add `@nestjs/config` with Joi validation
 - [x] Install `@nestjs/config` + `joi` in all 3 services

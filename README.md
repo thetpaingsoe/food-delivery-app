@@ -17,7 +17,9 @@ NestJS microservices architecture with Neon Postgres and RabbitMQ.
 | Doc | Description |
 |-----|-------------|
 | [Database Setup](./docs/database-setup.md) | Neon project, databases, roles, migrations |
+| [Database Schema](./docs/database-schema.md) | Table definitions, columns, types, relationships |
 | [Test Setup](./docs/test-setup.md) | Test databases, .env.test, running tests |
+| [API Collections](./docs/api-collections/) | Postman API collections |
 
 ## Quick Start
 
