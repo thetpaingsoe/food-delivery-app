@@ -1,20 +1,31 @@
 # Food Delivery App — Production Readiness Action Plan
 
-**Tech Stack:** NestJS 11 / TypeScript 5.7 / Drizzle ORM / Neon Postgres / RabbitMQ
+**Tech Stack:** NestJS 11 / TypeScript 5.7 / Drizzle ORM / Neon Postgres / RabbitMQ / React (Vite) / Tailwind CSS
 **Recommended Stack:** Pino + Joi + pnpm + Jest
+
+**Services (5 total):**
+| Service | Database | Transport | Port | Owns |
+|---------|----------|-----------|------|------|
+| auth-service | auth-db | HTTP | 3000 | Users, JWT |
+| item-service | item-db | HTTP | 3001 | Menu items, categories |
+| orders-service | orders-db | HTTP + RMQ | 3002 | Orders |
+| kitchen-service | kitchen-db | RMQ | — | Tickets |
+| rider-service | rider-db | RMQ | — | Dispatches |
 
 ---
 
 ## 📊 Progress Tracker
 
-**Overall:** `2 / 67 items completed (3%)`
+**Overall:** `2 / 89 items completed (2%)`
 
 ```
 Phase 1 — Foundation       [██░░░░░░░░]  2/21  (10%)
-Phase 2 — Operations       [░░░░░░░░░░]  0/16  (0%)
+Phase 2 — Operations       [░░░░░░░░░░]  0/20  (0%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
-Phase 4 — Resilience       [░░░░░░░░░░]  0/9   (0%)
+Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
+Phase 6 — Frontend         [░░░░░░░░░░]  0/8   (0%)
+Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 ```
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
@@ -29,6 +40,8 @@ Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 - [x] Verify `.env` is listed in `.gitignore` (confirmed — already done in all 3 services)
 - [x] Confirm `.env` files are not tracked by git (confirmed — `git ls-files` shows none tracked)
 - [x] Create `.env.example` for each service listing all required env vars with placeholder values
+- [ ] Create auth-service with its own database (users table)
+- [ ] Create item-service with its own database (menu items + categories tables)
 
 ### 1.2 Add `@nestjs/config` with Joi validation
 - [x] Install `@nestjs/config` + `joi` in all 3 services
@@ -117,13 +130,20 @@ Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 - [ ] Create service-specific Dockerfiles that set the correct entry point
 
 ### 2.5 Update docker-compose
-- [ ] Add service definitions for orders, kitchen, rider in `docker-compose.yml`
-- [ ] Set up proper networking so services can reach RabbitMQ by hostname
+- [ ] Add service definitions for all 5 services in `docker-compose.yml`
+- [ ] Set up proper networking so services can reach each other by hostname
 - [ ] Define env vars per service (or use `.env` file)
 - [ ] Add healthcheck for RabbitMQ
 
-### 2.6 Enable strict TypeScript
-- [ ] In all 3 `tsconfig.json` files:
+### 2.6 Service Discovery
+- [ ] Set up Consul or DNS-based service discovery in Docker
+- [ ] Each service registers itself on startup with name + host + port
+- [ ] orders-service discovers item-service dynamically instead of hardcoded URL
+- [ ] Add health check registration for each service
+- [ ] Handle service deregistration on shutdown
+
+### 2.7 Enable strict TypeScript
+- [ ] In all 5 `tsconfig.json` files:
   - Set `"strict": true` (which enables `noImplicitAny`, `strictNullChecks`, etc.)
   - Fix all resulting type errors
 - [ ] Consider adding `"noUnusedLocals": true` and `"noUnusedParameters": true` for extra safety
@@ -174,6 +194,21 @@ Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 - [ ] Install `@nestjs/throttler` in orders-service
 - [ ] Configure `ThrottlerModule` with sensible defaults (e.g., 10 requests/60 seconds per IP)
 - [ ] This protects the public `POST /orders` endpoint from abuse
+
+### 4.4 Add circuit breaker for inter-service calls
+- [ ] Install `opossum` in orders-service
+- [ ] Wrap item-service HTTP calls with circuit breaker
+- [ ] Configure: 5 failures → open circuit for 30s → half-open → retry
+- [ ] Return meaningful error when circuit is open (503 Service Unavailable)
+- [ ] Add circuit breaker metrics/logging for observability
+
+### 4.5 Add saga pattern (compensation)
+- [ ] orders-service emits `order_created` with a saga ID
+- [ ] If kitchen-service fails or rejects: emits `order_failed` with saga ID
+- [ ] orders-service listens for `order_failed`, updates order status to `cancelled`
+- [ ] Add `cancelled` status to order status enum
+- [ ] Add compensation logging for observability
+- [ ] Handle partial failures (e.g., kitchen succeeds but rider fails)
 
 ---
 
@@ -251,6 +286,69 @@ Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 
 ---
 
+## Phase 6 — Frontend (React + Vite + Tailwind)
+
+### 6.1 Project setup
+- [ ] Create `frontend/` directory with Vite + React + TypeScript
+- [ ] Install Tailwind CSS for styling
+- [ ] Set up React Router for navigation
+- [ ] Configure API proxy to backend services
+
+### 6.2 Auth pages
+- [ ] Build login page (email + password form)
+- [ ] Build register page (name + email + password form)
+- [ ] Store JWT in localStorage/httpOnly cookie
+- [ ] Add auth context/hook for managing user state
+- [ ] Protected routes: redirect to login if not authenticated
+
+### 6.3 Menu browsing
+- [ ] Build menu page with category tabs (Food / Drinks)
+- [ ] Fetch items from item-service API
+- [ ] Display items with image, name, description, price
+- [ ] Add to cart functionality (client-side state)
+
+### 6.4 Order placement
+- [ ] Build cart/checkout page
+- [ ] Show cart items with quantity, unit price, total
+- [ ] Delivery address form (street + area)
+- [ ] Place order button → calls orders-service API
+- [ ] Show order confirmation with order ID
+
+### 6.5 Order tracking
+- [ ] Build order history page (list of user's orders)
+- [ ] Build order detail page with status timeline
+- [ ] Poll orders-service for status updates (pending → cooking → dispatched → delivered)
+- [ ] Show estimated time or status messages
+
+### 6.6 UI polish
+- [ ] Responsive design (mobile-first)
+- [ ] Loading states and error handling
+- [ ] Toast notifications for actions
+- [ ] Clean, modern food delivery UI
+
+---
+
+## Phase 7 — Integration Testing
+
+### 7.1 End-to-end flow tests
+- [ ] Test full order flow: register → login → browse menu → place order → kitchen processes → rider dispatched
+- [ ] Test auth flows: register, login, invalid credentials, token expiration
+- [ ] Test menu browsing: list items, filter by category
+- [ ] Test order placement: valid order, invalid item, missing address
+
+### 7.2 Failure scenario tests
+- [ ] Test circuit breaker: item-service down → orders fail gracefully
+- [ ] Test saga compensation: kitchen fails → order cancelled
+- [ ] Test DLQ: message fails → goes to dead letter queue
+- [ ] Test service discovery: service goes down → requests route elsewhere
+
+### 7.3 Performance baseline
+- [ ] Measure order placement latency (with item-service call)
+- [ ] Measure menu fetch latency
+- [ ] Identify bottlenecks
+
+---
+
 ## Reference: Critical Files & Line Numbers
 
 | File | Line | Issue |
@@ -273,20 +371,29 @@ Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 ## Architecture Flow (for reference)
 
 ```
-Client → HTTP POST /orders
-           ↓
-    [orders-service]
-         stores order in DB
-         emits "order_created" → RMQ (kitchen_queue)
-           ↓
-    [kitchen-service]
-         creates ticket in DB
-         waits 2s (simulates cooking)
-         emits "order_ready" → RMQ (rider_queue)
-           ↓
-    [rider-service]
-         assigns random rider
-         creates dispatch record in DB
+Frontend (React)
+  ↓ HTTP
+auth-service (register/login) → returns JWT
+  ↓ HTTP
+item-service (browse menu) → returns items
+  ↓ HTTP + JWT
+orders-service (place order)
+  → calls item-service (fetch item details) [with circuit breaker]
+  → saves order to DB (with item snapshot)
+  → emits "order_created" → RMQ (kitchen_queue)
+    ↓
+kitchen-service
+  → creates ticket in DB
+  → waits 2s (simulates cooking)
+  → emits "order_ready" → RMQ (rider_queue)
+    ↓
+rider-service
+  → assigns random rider
+  → creates dispatch record in DB
+
+Saga Compensation:
+  If kitchen-service fails → emits "order_failed"
+  → orders-service listens → updates order status to "cancelled"
 ```
 
 ---
