@@ -141,13 +141,11 @@ describe('Auth (e2e)', () => {
 
   describe('POST /auth/login', () => {
     beforeEach(async () => {
-      await request(app.getHttpServer())
-        .post('/auth/register')
-        .send({
-          name: 'John Doe',
-          email: 'john@example.com',
-          password: 'Password1!',
-        });
+      await request(app.getHttpServer()).post('/auth/register').send({
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: 'Password1!',
+      });
     });
 
     it('should login with valid credentials', async () => {
@@ -211,9 +209,7 @@ describe('Auth (e2e)', () => {
     });
 
     it('should reject missing token', async () => {
-      await request(app.getHttpServer())
-        .get('/auth/verify')
-        .expect(401);
+      await request(app.getHttpServer()).get('/auth/verify').expect(401);
     });
 
     it('should reject invalid token', async () => {

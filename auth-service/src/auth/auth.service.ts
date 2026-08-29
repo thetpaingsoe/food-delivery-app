@@ -92,7 +92,10 @@ export class AuthService {
     return this.jwtService.sign(
       { sub: userId, email },
       {
-        expiresIn: this.configService.get<string>('JWT_EXPIRES_IN', '7d') as any,
+        expiresIn: this.configService.get<string>(
+          'JWT_EXPIRES_IN',
+          '7d',
+        ) as any,
       },
     );
   }
