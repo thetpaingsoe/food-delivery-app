@@ -40,7 +40,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 - [x] Verify `.env` is listed in `.gitignore` (confirmed — already done in all 3 services)
 - [x] Confirm `.env` files are not tracked by git (confirmed — `git ls-files` shows none tracked)
 - [x] Create `.env.example` for each service listing all required env vars with placeholder values
-- [ ] Create auth-service with its own database (users table)
+- [x] Create auth-service with its own database (users table)
 - [ ] Create item-service with its own database (menu items + categories tables)
 
 ### 1.2 Add `@nestjs/config` with Joi validation

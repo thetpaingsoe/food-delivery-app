@@ -10,13 +10,13 @@ export class AppController {
   async handle(
     @Payload()
     data: {
-      orderId : string;
-      customerName : string;
+      orderId: string;
+      customerName: string;
       item: string;
-    }
+    },
   ) {
-    console.log("Rider received dispatch for order : " + data.orderId)
+    console.log('Rider received dispatch for order : ' + data.orderId);
 
     await this.appService.dispatchRider(data);
   }
-} 
+}

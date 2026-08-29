@@ -6,32 +6,33 @@ import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class AppService {
-  constructor (
-    @Inject("KITCHEN_SERVICE") private readonly kitchenClient : ClientProxy,
-    private readonly dbService: DbService
+  constructor(
+    @Inject('KITCHEN_SERVICE') private readonly kitchenClient: ClientProxy,
+    private readonly dbService: DbService,
   ) {}
 
   async createOrder(dto: CreateOrderDto) {
-    const [order] = await this.dbService.db.insert(orders).values({
-      customerName: dto.customerName,
-      item: dto.item,
-      quantity: dto.quantity,
-      status: "pending"
-    })
-    .returning()
+    const [order] = await this.dbService.db
+      .insert(orders)
+      .values({
+        customerName: dto.customerName,
+        item: dto.item,
+        quantity: dto.quantity,
+        status: 'pending',
+      })
+      .returning();
 
-    console.log(`Order saved to DB: ${order.id}`)
+    console.log(`Order saved to DB: ${order.id}`);
 
-    this.kitchenClient.emit("order_created", {
+    this.kitchenClient.emit('order_created', {
       orderId: order.id,
       customerName: order.customerName,
-      item : order.item,
-      quantity: order.quantity
-    })
+      item: order.item,
+      quantity: order.quantity,
+    });
 
-    console.log("Event emitted to kitchen queue")
+    console.log('Event emitted to kitchen queue');
 
-    return {success: true, orderId: order.id}
+    return { success: true, orderId: order.id };
   }
-
 }

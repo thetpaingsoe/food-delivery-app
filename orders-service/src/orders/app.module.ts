@@ -10,34 +10,33 @@ import { DbService } from '../db/db.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      validationSchema : Joi.object({
+      validationSchema: Joi.object({
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(3000),
         RABBITMQ_URL: Joi.string().default('amqp://guest:guest@localhost:5672'),
         NODE_ENV: Joi.string()
-          .valid('development','production')
-          .default('development')
-      })
+          .valid('development', 'production')
+          .default('development'),
+      }),
     }),
     ClientsModule.registerAsync([
       {
         name: 'KITCHEN_SERVICE',
-        useFactory: ( configService : ConfigService) => ({
+        useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
             urls: [configService.get<string>('RABBITMQ_URL')!],
-            queue: "kitchen_queue",
-            queueOptions: {durable: configService.get<string>('NODE_ENV') === 'production'}
-          }
+            queue: 'kitchen_queue',
+            queueOptions: {
+              durable: configService.get<string>('NODE_ENV') === 'production',
+            },
+          },
         }),
-        inject: [ConfigService]
-      }
-    ])
+        inject: [ConfigService],
+      },
+    ]),
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    DbService 
-  ],
+  providers: [AppService, DbService],
 })
 export class AppModule {}

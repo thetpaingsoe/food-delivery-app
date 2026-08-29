@@ -6,9 +6,8 @@ import { CreateOrderDto } from './dto/create-order.dto';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post()  
+  @Post()
   async createOrder(@Body() dto: CreateOrderDto) {
     return this.appService.createOrder(dto);
   }
-
 }
