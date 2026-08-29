@@ -14,7 +14,7 @@ import { DbService } from '../db/db.service';
         PORT: Joi.number().default(3000),
         RABBITMQ_URL: Joi.string().default('amqp://guest:guest@localhost:5672'),
         NODE_ENV: Joi.string()
-          .valid('development', 'production')
+          .valid('development', 'production', 'test')
           .default('development'),
       }),
     }),

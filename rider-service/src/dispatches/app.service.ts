@@ -10,7 +10,10 @@ export class AppService {
   async dispatchRider(data: {
     orderId: string;
     customerName: string;
-    item: string;
+    itemName: string;
+    quantity: number;
+    street: string;
+    area: string;
   }) {
     const rider = RIDERS[Math.floor(Math.random() * RIDERS.length)];
 
@@ -19,12 +22,15 @@ export class AppService {
       .values({
         orderId: data.orderId,
         customerName: data.customerName,
-        item: data.item,
+        itemName: data.itemName,
+        quantity: data.quantity,
+        street: data.street,
+        area: data.area,
         riderStatus: 'dispatched',
       })
       .returning();
 
     console.log('dispatched save with ID : ', dispatch.orderId);
-    console.log(rider + ' is on the way with your item ' + dispatch.item);
+    console.log(rider + ' is on the way with your item ' + dispatch.itemName);
   }
 }

@@ -12,8 +12,10 @@ export class AppController {
     data: {
       orderId: string;
       customerName: string;
-      item: string;
+      itemName: string;
       quantity: number;
+      street: string;
+      area: string;
     },
   ) {
     console.log('kitchen received order: ' + data.orderId);

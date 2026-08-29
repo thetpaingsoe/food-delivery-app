@@ -13,15 +13,20 @@ export class AppService {
   async processOrder(data: {
     orderId: string;
     customerName: string;
-    item: string;
+    itemName: string;
     quantity: number;
+    street: string;
+    area: string;
   }) {
     const [ticket] = await this.dbService.db
       .insert(tickets)
       .values({
         orderId: data.orderId,
-        customName: data.customerName,
-        item: data.item,
+        customerName: data.customerName,
+        itemName: data.itemName,
+        quantity: data.quantity,
+        street: data.street,
+        area: data.area,
         status: 'received',
       })
       .returning();
@@ -33,7 +38,10 @@ export class AppService {
     this.riderClient.emit('order_ready', {
       orderId: data.orderId,
       customerName: data.customerName,
-      item: data.item,
+      itemName: data.itemName,
+      quantity: data.quantity,
+      street: data.street,
+      area: data.area,
     });
 
     console.log('Event emitted to rider_queue ( order ready)');

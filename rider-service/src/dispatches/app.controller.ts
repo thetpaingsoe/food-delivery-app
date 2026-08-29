@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
 
@@ -12,7 +12,10 @@ export class AppController {
     data: {
       orderId: string;
       customerName: string;
-      item: string;
+      itemName: string;
+      quantity: number;
+      street: string;
+      area: string;
     },
   ) {
     console.log('Rider received dispatch for order : ' + data.orderId);
