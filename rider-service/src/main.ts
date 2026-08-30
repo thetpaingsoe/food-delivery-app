@@ -3,6 +3,7 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './dispatches/app.module';
+import { AllRpcExceptionsFilter } from './common/filters/all-rpc-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -18,6 +19,8 @@ async function bootstrap() {
       },
     },
   );
+
+  app.useGlobalFilters(new AllRpcExceptionsFilter());
 
   await app.listen();
   console.log('🔄 Rider Serivce is listening on rider_queue');

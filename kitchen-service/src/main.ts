@@ -3,6 +3,7 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './tickets/app.module';
+import { AllRpcExceptionsFilter } from './common/filters/all-rpc-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -16,6 +17,8 @@ async function bootstrap() {
       },
     },
   );
+
+  app.useGlobalFilters(new AllRpcExceptionsFilter());
 
   await app.listen();
   console.log('🔄 kitchen servie is listening on kitchen_queue');
