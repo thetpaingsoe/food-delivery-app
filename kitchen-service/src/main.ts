@@ -21,6 +21,6 @@ async function bootstrap() {
   app.useGlobalFilters(new AllRpcExceptionsFilter());
 
   await app.listen();
-  console.log('🔄 kitchen servie is listening on kitchen_queue');
+  console.log('🔄 kitchen service is listening on kitchen_queue');
 }
 bootstrap();

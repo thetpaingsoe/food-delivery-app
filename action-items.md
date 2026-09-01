@@ -16,10 +16,10 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `10 / 89 items completed (11%)`
+**Overall:** `13 / 89 items completed (15%)`
 
 ```
-Phase 1 — Foundation       [███░░░░░░░]  10/21  (48%)
+Phase 1 — Foundation       [███░░░░░░░]  13/21  (62%)
 Phase 2 — Operations       [░░░░░░░░░░]  0/20  (0%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
@@ -79,13 +79,13 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 - [x] Migrate all service + controller `console.log` to NestJS `Logger` (services: orders, kitchen, rider, auth, item; controllers: kitchen, rider)
 
 ### 1.6 Clean up code issues
-- [ ] Remove unused import `duration` from `drizzle-orm/gel-core` in:
+- [x] Remove unused import `duration` from `drizzle-orm/gel-core` in:
   - `orders-service/src/app.module.ts` (line 5)
   - `rider-service/src/main.ts` (line 6)
-- [ ] Fix typos:
+- [x] Fix typos:
   - `kitchen-service/src/main.ts` line 18: `"kitchen servie"` → `"kitchen service"`
   - `rider-service/src/main.ts` line 24: `"Rider Serivce"` → `"Rider Service"`
-- [ ] Standardize column naming: `kitchen-service/src/db/schema.ts` line 6: `customName` → `customerName`
+- [x] Standardize column naming: `kitchen-service/src/db/schema.ts` line 6: `customName` → `customerName`
 
 ---
 

@@ -23,6 +23,6 @@ async function bootstrap() {
   app.useGlobalFilters(new AllRpcExceptionsFilter());
 
   await app.listen();
-  console.log('🔄 Rider Serivce is listening on rider_queue');
+  console.log('🔄 Rider Service is listening on rider_queue');
 }
 bootstrap();
