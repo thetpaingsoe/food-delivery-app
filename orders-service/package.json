@@ -85,5 +85,13 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "bcrypt",
+      "esbuild",
+      "@parcel/watcher",
+      "unrs-resolver"
+    ]
   }
 }

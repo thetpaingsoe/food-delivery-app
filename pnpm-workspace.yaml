@@ -1,0 +1,6 @@
+packages:
+  - 'auth-service'
+  - 'item-service'
+  - 'orders-service'
+  - 'kitchen-service'
+  - 'rider-service'

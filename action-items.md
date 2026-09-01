@@ -16,11 +16,11 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `13 / 89 items completed (15%)`
+**Overall:** `35 / 89 items completed (39%)`
 
 ```
-Phase 1 — Foundation       [███░░░░░░░]  13/21  (62%)
-Phase 2 — Operations       [░░░░░░░░░░]  0/20  (0%)
+Phase 1 — Foundation       [██████████]  33/33  (100%)
+Phase 2 — Operations       [█░░░░░░░░░]  2/20  (10%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Item-service fully implemented with own database + schema | **Date:** 2026-08-29
+**Last action completed:** Standardized on pnpm across all 5 services | **Date:** 2026-09-01
 
 ---
 
@@ -92,11 +92,11 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 ## Phase 2 — Operations (Graceful Shutdown, Health Checks, Docker)
 
 ### 2.1 Standardize on pnpm
-- [ ] For `orders-service` and `kitchen-service`:
+- [x] For `orders-service` and `kitchen-service`:
   - Delete `package-lock.json`
   - Run `pnpm import` to generate `pnpm-lock.yaml` from existing deps
   - Add `pnpm-workspace.yaml` at `main/` level (rider already has it)
-- [ ] Create root `pnpm-workspace.yaml`:
+- [x] Create root `pnpm-workspace.yaml`:
   ```yaml
   packages:
     - 'orders-service'
