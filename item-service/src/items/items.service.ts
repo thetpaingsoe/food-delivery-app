@@ -1,7 +1,9 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   ConflictException,
+  BadGatewayException,
 } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DbService } from '../db/db.service';
@@ -13,6 +15,8 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class ItemsService {
+  private readonly logger = new Logger(ItemsService.name);
+
   constructor(private readonly dbService: DbService) {}
 
   async listCategories() {
@@ -30,10 +34,16 @@ export class ItemsService {
       throw new ConflictException('Category already exists');
     }
 
-    const [created] = await this.dbService.db
-      .insert(categories)
-      .values({ name: dto.name })
-      .returning();
+    let created;
+    try {
+      [created] = await this.dbService.db
+        .insert(categories)
+        .values({ name: dto.name })
+        .returning();
+    } catch (error) {
+      this.logger.error('Failed to create category', error as Error);
+      throw new BadGatewayException('Could not create the category');
+    }
 
     return created;
   }
@@ -108,17 +118,23 @@ export class ItemsService {
       throw new NotFoundException('Category not found');
     }
 
-    const [created] = await this.dbService.db
-      .insert(menuItems)
-      .values({
-        name: dto.name,
-        description: dto.description,
-        price: dto.price,
-        categoryId: dto.categoryId,
-        imageUrl: dto.imageUrl,
-        available: dto.available ?? true,
-      })
-      .returning();
+    let created;
+    try {
+      [created] = await this.dbService.db
+        .insert(menuItems)
+        .values({
+          name: dto.name,
+          description: dto.description,
+          price: dto.price,
+          categoryId: dto.categoryId,
+          imageUrl: dto.imageUrl,
+          available: dto.available ?? true,
+        })
+        .returning();
+    } catch (error) {
+      this.logger.error('Failed to create menu item', error as Error);
+      throw new BadGatewayException('Could not create the menu item');
+    }
 
     return created;
   }

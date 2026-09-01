@@ -1,7 +1,9 @@
 import {
   Injectable,
+  Logger,
   ConflictException,
   UnauthorizedException,
+  BadGatewayException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -14,6 +16,8 @@ import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly dbService: DbService,
     private readonly jwtService: JwtService,
@@ -33,14 +37,20 @@ export class AuthService {
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
 
-    const [created] = await this.dbService.db
-      .insert(users)
-      .values({
-        name: dto.name,
-        email: dto.email,
-        passwordHash,
-      })
-      .returning();
+    let created;
+    try {
+      [created] = await this.dbService.db
+        .insert(users)
+        .values({
+          name: dto.name,
+          email: dto.email,
+          passwordHash,
+        })
+        .returning();
+    } catch (error) {
+      this.logger.error('Failed to persist user', error as Error);
+      throw new BadGatewayException('Could not create the account');
+    }
 
     const token = this.signToken(created.id, created.email);
 
@@ -71,6 +81,7 @@ export class AuthService {
 
     const token = this.signToken(user.id, user.email);
 
+    this.logger.log('Logged In', user.name);
     return {
       id: user.id,
       name: user.name,

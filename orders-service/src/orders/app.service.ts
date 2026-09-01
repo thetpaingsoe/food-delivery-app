@@ -1,7 +1,13 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+  BadGatewayException,
+} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
 import { orders } from '../db/schema';
 import { DbService } from '../db/db.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -14,6 +20,8 @@ interface MenuItem {
 
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger(AppService.name);
+
   constructor(
     @Inject('KITCHEN_SERVICE') private readonly kitchenClient: ClientProxy,
     private readonly dbService: DbService,
@@ -25,33 +33,49 @@ export class AppService {
 
     const totalPrice = item.price * dto.quantity;
 
-    const [order] = await this.dbService.db
-      .insert(orders)
-      .values({
-        customerName: dto.customerName,
-        menuItemId: dto.menuItemId,
-        itemName: item.name,
-        itemPrice: String(item.price),
-        quantity: dto.quantity,
-        totalPrice: String(totalPrice),
-        street: dto.street,
-        area: dto.area,
-        status: 'pending',
-      })
-      .returning();
+    let order;
+    try {
+      [order] = await this.dbService.db
+        .insert(orders)
+        .values({
+          customerName: dto.customerName,
+          menuItemId: dto.menuItemId,
+          itemName: item.name,
+          itemPrice: String(item.price),
+          quantity: dto.quantity,
+          totalPrice: String(totalPrice),
+          street: dto.street,
+          area: dto.area,
+          status: 'pending',
+        })
+        .returning();
+    } catch (error) {
+      this.logger.error('Failed to persist order', error as Error);
+      throw new BadGatewayException('Could not save the order');
+    }
 
-    console.log(`Order saved to DB: ${order.id}`);
+    this.logger.log(`Order saved to DB: ${order.id}`);
 
-    this.kitchenClient.emit('order_created', {
-      orderId: order.id,
-      customerName: order.customerName,
-      itemName: order.itemName,
-      quantity: order.quantity,
-      street: order.street,
-      area: order.area,
-    });
-
-    console.log('Event emitted to kitchen queue');
+    try {
+      await firstValueFrom(
+        this.kitchenClient
+          .emit('order_created', {
+            orderId: order.id,
+            customerName: order.customerName,
+            itemName: order.itemName,
+            quantity: order.quantity,
+            street: order.street,
+            area: order.area,
+          })
+          .pipe(timeout(5000)),
+      );
+      this.logger.log('Event emitted to kitchen queue');
+    } catch (error) {
+      this.logger.error(
+        `Order ${order.id} saved but could not notify kitchen`,
+        error as Error,
+      );
+    }
 
     return { success: true, orderId: order.id };
   }

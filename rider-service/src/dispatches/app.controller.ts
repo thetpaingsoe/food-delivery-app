@@ -1,9 +1,11 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { AppService } from './app.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class AppController {
+  private readonly logger = new Logger(AppController.name);
+
   constructor(private readonly appService: AppService) {}
 
   @EventPattern('order_ready')
@@ -18,7 +20,7 @@ export class AppController {
       area: string;
     },
   ) {
-    console.log('Rider received dispatch for order : ' + data.orderId);
+    this.logger.log('Rider received dispatch for order : ' + data.orderId);
 
     await this.appService.dispatchRider(data);
   }

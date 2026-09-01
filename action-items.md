@@ -16,10 +16,10 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `6 / 89 items completed (7%)`
+**Overall:** `10 / 89 items completed (11%)`
 
 ```
-Phase 1 — Foundation       [███░░░░░░░]  6/21  (29%)
+Phase 1 — Foundation       [███░░░░░░░]  10/21  (48%)
 Phase 2 — Operations       [░░░░░░░░░░]  0/20  (0%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
@@ -67,15 +67,16 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 - [x] Register `ValidationPipe` globally in `orders-service/src/main.ts`
 
 ### 1.4 Add global exception filter
-- [ ] Create `src/common/filters/all-exceptions.filter.ts` in each service
-- [ ] Register it as a global filter via `app.useGlobalFilters()` in `main.ts`
-- [ ] Log errors with structured format (prepares for Pino later)
+- [x] Create `src/common/filters/all-exceptions.filter.ts` in each service
+- [x] Register it as a global filter via `app.useGlobalFilters()` in `main.ts`
+- [x] Log errors with structured format (prepares for Pino later)
 
 ### 1.5 Add error handling to business logic
-- [ ] Wrap all DB inserts in try/catch in all 3 `app.service.ts` files
-- [ ] Wrap all RMQ `.emit()` calls in try/catch
-- [ ] `await` the `ClientProxy.emit()` promise (or `.catch()`) — orders-service line 26
-- [ ] Add error recovery / graceful degradation where appropriate
+- [x] Wrap all DB inserts in try/catch in all 3 `app.service.ts` files
+- [x] Wrap all RMQ `.emit()` calls in try/catch
+- [x] `await` the `ClientProxy.emit()` promise (or `.catch()`) — orders-service line 26
+- [x] Add error recovery / graceful degradation where appropriate
+- [x] Migrate all service + controller `console.log` to NestJS `Logger` (services: orders, kitchen, rider, auth, item; controllers: kitchen, rider)
 
 ### 1.6 Clean up code issues
 - [ ] Remove unused import `duration` from `drizzle-orm/gel-core` in:
