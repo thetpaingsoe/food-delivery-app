@@ -16,11 +16,11 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `35 / 89 items completed (39%)`
+**Overall:** `37 / 89 items completed (42%)`
 
 ```
 Phase 1 — Foundation       [██████████]  33/33  (100%)
-Phase 2 — Operations       [█░░░░░░░░░]  2/20  (10%)
+Phase 2 — Operations       [██░░░░░░░░]  4/20  (20%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Standardized on pnpm across all 5 services | **Date:** 2026-09-01
+**Last action completed:** Enabled graceful shutdown on all services | **Date:** 2026-09-02
 
 ---
 
@@ -105,8 +105,8 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
   ```
 
 ### 2.2 Enable graceful shutdown
-- [ ] Add `app.enableShutdownHooks()` in all 3 `main.ts` files
-- [ ] Register `SIGTERM`/`SIGINT` handlers that:
+- [x] Add `app.enableShutdownHooks()` in all 3 `main.ts` files
+- [x] Register `SIGTERM`/`SIGINT` handlers that:
   - Close RMQ connections
   - Close DB connections
   - Wait for in-flight requests to complete
@@ -365,9 +365,6 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 | File | Line | Issue |
 |------|------|-------|
-| `main/orders-service/.env` | 1 | Live DB creds committed |
-| `main/kitchen-service/.env` | 1 | Live DB creds committed |
-| `main/rider-service/.env` | 1 | Live DB creds committed |
 | `main/orders-service/src/app.module.ts` | 5 | Unused `duration` import |
 | `main/orders-service/src/app.module.ts` | 14 | Hardcoded `guest:guest` |
 | `main/orders-service/src/app.service.ts` | 26 | RMQ emit not awaited |

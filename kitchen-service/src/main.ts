@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './tickets/app.module';
 import { AllRpcExceptionsFilter } from './common/filters/all-rpc-exception.filter';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -21,6 +22,9 @@ async function bootstrap() {
   app.useGlobalFilters(new AllRpcExceptionsFilter());
 
   await app.listen();
-  console.log('🔄 kitchen service is listening on kitchen_queue');
+  const logger = new Logger('Bootstrap');
+  logger.log('Kitchen service listening on kitchen_queue');
+
+  app.enableShutdownHooks();
 }
 bootstrap();

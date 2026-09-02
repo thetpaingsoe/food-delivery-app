@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './dispatches/app.module';
 import { AllRpcExceptionsFilter } from './common/filters/all-rpc-exception.filter';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -23,6 +24,9 @@ async function bootstrap() {
   app.useGlobalFilters(new AllRpcExceptionsFilter());
 
   await app.listen();
-  console.log('🔄 Rider Service is listening on rider_queue');
+  const logger = new Logger('Bootstrap');
+  logger.log('Rider service listening on rider_queue');
+
+  app.enableShutdownHooks();
 }
 bootstrap();
