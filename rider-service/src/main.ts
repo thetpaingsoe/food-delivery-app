@@ -5,6 +5,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './dispatches/app.module';
 import { AllRpcExceptionsFilter } from './common/filters/all-rpc-exception.filter';
 import { Logger } from '@nestjs/common';
+import { HealthModule } from './health/health.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -28,5 +29,10 @@ async function bootstrap() {
   logger.log('Rider service listening on rider_queue');
 
   app.enableShutdownHooks();
+
+  const healthApp = await NestFactory.create(HealthModule);
+  const healthPort = process.env.HEALTH_PORT || 3011;
+  await healthApp.listen(healthPort);
+  logger.log(`Rider health server running on port ${healthPort}`);
 }
 bootstrap();

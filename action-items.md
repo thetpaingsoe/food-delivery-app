@@ -16,11 +16,11 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `37 / 89 items completed (42%)`
+**Overall:** `41 / 89 items completed (46%)`
 
 ```
 Phase 1 — Foundation       [██████████]  33/33  (100%)
-Phase 2 — Operations       [██░░░░░░░░]  4/20  (20%)
+Phase 2 — Operations       [███░░░░░░░]  6/20  (30%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Enabled graceful shutdown on all services | **Date:** 2026-09-02
+**Last action completed:** Added health check endpoints to all services | **Date:** 2026-09-02
 
 ---
 
@@ -113,12 +113,13 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
   - Exit cleanly
 
 ### 2.3 Add health check endpoints
-- [ ] Install `@nestjs/terminus` in all 3 services
-- [ ] Create health controller with:
+- [x] Install `@nestjs/terminus` in all 3 services
+- [x] Create health controller with:
   - `GET /health` — liveness probe (service is running)
   - `GET /health/readiness` — readiness probe (DB + RMQ are reachable)
-- [ ] Register `TerminusModule` with `DrizzleHealthIndicator` (or custom DB health check) and `RabbitMQHealthIndicator`
-- [ ] Expose health endpoints on a different port (e.g., 3001) or via a separate admin server to avoid conflating with business traffic
+- [x] Register `TerminusModule` with `DrizzleHealthIndicator` (or custom DB health check) and `RabbitMQHealthIndicator`
+- [x] Expose health endpoints on a different port (e.g., 3001) or via a separate admin server to avoid conflating with business traffic
+- [x] Add RMQ ping to readiness probe
 
 ### 2.4 Add Dockerfiles
 - [ ] Create `main/Dockerfile` (multi-stage build, shared across services with build args):

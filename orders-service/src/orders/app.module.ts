@@ -6,6 +6,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 import { DbService } from '../db/db.service';
+import { HealthModule } from '../health/health.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { DbService } from '../db/db.service';
         inject: [ConfigService],
       },
     ]),
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService, DbService],
