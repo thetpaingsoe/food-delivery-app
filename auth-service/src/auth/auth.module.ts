@@ -5,6 +5,7 @@ import Joi from 'joi';
 import { DbService } from '../db/db.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { HealthModule } from '../health/health.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AuthService } from './auth.service';
       }),
       inject: [ConfigService],
     }),
+    HealthModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, DbService],

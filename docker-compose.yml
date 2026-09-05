@@ -1,11 +1,113 @@
 services:
   rabbitmq:
-    image : rabbitmq:3-management
+    image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
       - '5672:5672'
       - '15672:15672'
     environment:
-      RABBITMQ_DEFAULT_USER : guest
-      RABBITMQ_DEFAULT_PASS : guest
-  
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: ${AUTH_DATABASE_URL}
+      PORT: 3000
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      NODE_ENV: production
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:3000/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  item-service:
+    build: ./item-service
+    container_name: item-service
+    ports:
+      - '3001:3001'
+    environment:
+      DATABASE_URL: ${ITEM_DATABASE_URL}
+      PORT: 3001
+      NODE_ENV: production
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:3001/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  orders-service:
+    build: ./orders-service
+    container_name: orders-service
+    ports:
+      - '3002:3002'
+    environment:
+      DATABASE_URL: ${ORDERS_DATABASE_URL}
+      PORT: 3002
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      ITEM_SERVICE_URL: http://item-service:3001
+      NODE_ENV: production
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      item-service:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:3002/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kitchen-service:
+    build: ./kitchen-service
+    container_name: kitchen-service
+    ports:
+      - '3010:3010'
+    environment:
+      DATABASE_URL: ${KITCHEN_DATABASE_URL}
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      HEALTH_PORT: 3010
+      NODE_ENV: production
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:3010/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rider-service:
+    build: ./rider-service
+    container_name: rider-service
+    ports:
+      - '3011:3011'
+    environment:
+      DATABASE_URL: ${RIDER_DATABASE_URL}
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      HEALTH_PORT: 3011
+      NODE_ENV: production
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:3011/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5

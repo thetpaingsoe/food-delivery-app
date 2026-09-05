@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     TerminusModule,
+    ConfigModule.forRoot({ isGlobal: true }),
     ClientsModule.registerAsync([
       {
         name: 'RIDER_SERVICE',

@@ -18,10 +18,23 @@ NestJS microservices architecture with Neon Postgres and RabbitMQ.
 |-----|-------------|
 | [Database Setup](./docs/database-setup.md) | Neon project, databases, roles, migrations |
 | [Database Schema](./docs/database-schema.md) | Table definitions, columns, types, relationships |
+| [Docker Setup](./docs/docker-setup.md) | Docker Compose, running all services, troubleshooting |
 | [Test Setup](./docs/test-setup.md) | Test databases, .env.test, running tests |
 | [API Collections](./docs/api-collections/) | Postman API collections |
 
 ## Quick Start
+
+### Docker (recommended)
+
+```bash
+cd main
+cp .env.example .env  # Fill in your database URLs
+docker-compose up -d
+```
+
+See [docker-setup.md](./docs/docker-setup.md) for full instructions.
+
+### Local development
 
 1. Create databases and roles — see [database-setup.md](./docs/database-setup.md)
 2. Configure `.env` for each service

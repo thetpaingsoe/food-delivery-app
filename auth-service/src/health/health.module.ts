@@ -2,13 +2,11 @@ import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './health.controller';
 import { NeonHealthIndicator } from './neon.health';
-import { RmqHealthIndicator } from './rmq.health';
 import { DbService } from '../db/db.service';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TerminusModule, ConfigModule.forRoot({ isGlobal: true })],
+  imports: [TerminusModule],
   controllers: [HealthController],
-  providers: [NeonHealthIndicator, RmqHealthIndicator, DbService],
+  providers: [NeonHealthIndicator, DbService],
 })
 export class HealthModule {}

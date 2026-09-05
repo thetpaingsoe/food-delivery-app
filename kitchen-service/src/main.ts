@@ -6,30 +6,34 @@ import { AppModule } from './tickets/app.module';
 import { AllRpcExceptionsFilter } from './common/filters/all-rpc-exception.filter';
 import { Logger } from '@nestjs/common';
 import { HealthModule } from './health/health.module';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+  const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+
+  const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
       transport: Transport.RMQ,
       options: {
-        url: [process.env.RABBITMQ_URL],
+        urls: [configService.get<string>('RABBITMQ_URL')!],
         queue: 'kitchen_queue',
-        queueOptions: { durable: process.env.NODE_ENV === 'production' },
+        queueOptions: { durable: configService.get<string>('NODE_ENV') === 'production' },
       },
     },
   );
 
-  app.useGlobalFilters(new AllRpcExceptionsFilter());
+  microservice.useGlobalFilters(new AllRpcExceptionsFilter());
 
-  await app.listen();
+  await microservice.listen();
   const logger = new Logger('Bootstrap');
   logger.log('Kitchen service listening on kitchen_queue');
 
-  app.enableShutdownHooks();
+  microservice.enableShutdownHooks();
 
   const healthApp = await NestFactory.create(HealthModule);
-  const healthPort = process.env.HEALTH_PORT || 3010;
+  const healthPort = configService.get<number>('HEALTH_PORT', 3010);
   await healthApp.listen(healthPort);
   logger.log(`Kitchen health server running on port ${healthPort}`);
 }

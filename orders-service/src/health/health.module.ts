@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     TerminusModule,
+    ConfigModule,
     ClientsModule.registerAsync([
       {
         name: 'KITCHEN_SERVICE',

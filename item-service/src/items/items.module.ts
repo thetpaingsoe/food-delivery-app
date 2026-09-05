@@ -6,6 +6,7 @@ import { DbService } from '../db/db.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { ItemsController } from './items.controller';
 import { ItemsService } from './items.service';
+import { HealthModule } from '../health/health.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ItemsService } from './items.service';
       }),
       inject: [ConfigService],
     }),
+    HealthModule,
   ],
   controllers: [ItemsController],
   providers: [ItemsService, DbService, AuthGuard],

@@ -21,5 +21,7 @@ async function bootstrap() {
   const port = configService.get<number>('PORT', 3001);
   await app.listen(port);
   console.log(`Item service is running on localhost:${port}`);
+
+  app.enableShutdownHooks();
 }
 bootstrap();

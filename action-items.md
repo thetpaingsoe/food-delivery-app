@@ -16,11 +16,11 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `41 / 89 items completed (46%)`
+**Overall:** `53 / 89 items completed (60%)`
 
 ```
 Phase 1 — Foundation       [██████████]  33/33  (100%)
-Phase 2 — Operations       [███░░░░░░░]  6/20  (30%)
+Phase 2 — Operations       [██████░░░░]  14/20 (70%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Added health check endpoints to all services | **Date:** 2026-09-02
+**Last action completed:** Fixed health module dependency injection for standalone health apps | **Date:** 2026-09-05
 
 ---
 
@@ -113,16 +113,17 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
   - Exit cleanly
 
 ### 2.3 Add health check endpoints
-- [x] Install `@nestjs/terminus` in all 3 services
+- [x] Install `@nestjs/terminus` in all 5 services
 - [x] Create health controller with:
   - `GET /health` — liveness probe (service is running)
   - `GET /health/readiness` — readiness probe (DB + RMQ are reachable)
-- [x] Register `TerminusModule` with `DrizzleHealthIndicator` (or custom DB health check) and `RabbitMQHealthIndicator`
-- [x] Expose health endpoints on a different port (e.g., 3001) or via a separate admin server to avoid conflating with business traffic
-- [x] Add RMQ ping to readiness probe
+- [x] Register `TerminusModule` with `NeonHealthIndicator` and `RmqHealthIndicator`
+- [x] Expose health endpoints on dedicated ports for kitchen (:3010) and rider (:3011)
+- [x] Add RMQ ping to readiness probe (orders, kitchen, rider)
+- [x] Register HealthModule in auth-service and item-service as child modules
 
 ### 2.4 Add Dockerfiles
-- [ ] Create `main/Dockerfile` (multi-stage build, shared across services with build args):
+- [x] Create `main/Dockerfile` (multi-stage build, shared across services with build args):
   ```dockerfile
   # Build stage
   FROM node:22-alpine AS build
@@ -140,13 +141,14 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
   EXPOSE 3000
   CMD ["node", "dist/main"]
   ```
-- [ ] Create service-specific Dockerfiles that set the correct entry point
+- [x] Create service-specific Dockerfiles that set the correct entry point
 
 ### 2.5 Update docker-compose
-- [ ] Add service definitions for all 5 services in `docker-compose.yml`
-- [ ] Set up proper networking so services can reach each other by hostname
-- [ ] Define env vars per service (or use `.env` file)
-- [ ] Add healthcheck for RabbitMQ
+- [x] Add service definitions for all 5 services in `docker-compose.yml`
+- [x] Set up proper networking so services can reach each other by hostname
+- [x] Define env vars per service (or use `.env` file)
+- [x] Add healthcheck for RabbitMQ
+- [x] Create Docker setup documentation
 
 ### 2.6 Service Discovery
 - [ ] Set up Consul or DNS-based service discovery in Docker
