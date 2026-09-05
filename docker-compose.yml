@@ -14,6 +14,20 @@ services:
       timeout: 5s
       retries: 5
 
+  consul:
+    image: hashicorp/consul:latest
+    container_name: consul
+    command: agent -dev -ui -client=0.0.0.0
+    ports:
+      - '8500:8500'
+      - '8600:8600/tcp'
+      - '8600:8600/udp'
+    healthcheck:
+      test: ['CMD', 'consul', 'members']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   auth-service:
     build: ./auth-service
     container_name: auth-service
@@ -42,6 +56,7 @@ services:
     environment:
       DATABASE_URL: ${ITEM_DATABASE_URL}
       PORT: 3001
+      CONSUL_URL: http://consul:8500
       NODE_ENV: production
     depends_on:
       rabbitmq:

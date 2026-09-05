@@ -7,6 +7,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { ItemsController } from './items.controller';
 import { ItemsService } from './items.service';
 import { HealthModule } from '../health/health.module';
+import { ConsulService } from '../consul/consul.service';
 
 @Module({
   imports: [
@@ -17,6 +18,9 @@ import { HealthModule } from '../health/health.module';
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(3001),
         AUTH_SERVICE_URL: Joi.string().default('http://localhost:3000'),
+        CONSUL_URL: Joi.string().default('http://localhost:8500'),
+        SERVICE_NAME: Joi.string().default('item-service'),
+        SERVICE_ADDRESS: Joi.string().default('item-service'),
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')
           .default('development'),
@@ -35,6 +39,6 @@ import { HealthModule } from '../health/health.module';
     HealthModule,
   ],
   controllers: [ItemsController],
-  providers: [ItemsService, DbService, AuthGuard],
+  providers: [ItemsService, DbService, AuthGuard, ConsulService],
 })
 export class AppModule {}
