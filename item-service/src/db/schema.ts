@@ -6,7 +6,6 @@ import {
   integer,
   boolean,
   timestamp,
-  foreignKey,
 } from 'drizzle-orm/pg-core';
 
 export const categories = pgTable('categories', {

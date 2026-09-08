@@ -5,7 +5,6 @@ import { App } from 'supertest/types';
 import { AppModule } from '../src/auth/auth.module';
 import { DbService } from '../src/db/db.service';
 import { users } from '../src/db/schema';
-import { ne } from 'drizzle-orm';
 
 describe('Auth (e2e)', () => {
   let app: INestApplication<App>;

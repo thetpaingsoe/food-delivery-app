@@ -16,11 +16,11 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `58 / 89 items completed (65%)`
+**Overall:** `60 / 89 items completed (67%)`
 
 ```
 Phase 1 — Foundation       [██████████]  33/33  (100%)
-Phase 2 — Operations       [█████████░]  19/20 (95%)
+Phase 2 — Operations       [██████████]  20/20 (100%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Completed 2.6 service discovery (Consul + registration x5 + orders→item dynamic lookup) | **Date:** 2026-09-08
+**Last action completed:** Completed 2.7 strict TypeScript in all 5 services | **Date:** 2026-09-08
 
 ---
 
@@ -158,10 +158,10 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 - [x] Handle service deregistration on shutdown (`onModuleDestroy` + shutdown hooks; added missing `enableShutdownHooks()` to auth-service)
 
 ### 2.7 Enable strict TypeScript
-- [ ] In all 5 `tsconfig.json` files:
+- [x] In all 5 `tsconfig.json` files:
   - Set `"strict": true` (which enables `noImplicitAny`, `strictNullChecks`, etc.)
   - Fix all resulting type errors
-- [ ] Consider adding `"noUnusedLocals": true` and `"noUnusedParameters": true` for extra safety
+- [x] Consider adding `"noUnusedLocals": true` and `"noUnusedParameters": true` for extra safety
 
 ---
 
