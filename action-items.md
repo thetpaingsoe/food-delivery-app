@@ -16,12 +16,12 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `60 / 89 items completed (67%)`
+**Overall:** `64 / 89 items completed (72%)`
 
 ```
 Phase 1 — Foundation       [██████████]  33/33  (100%)
 Phase 2 — Operations       [██████████]  20/20 (100%)
-Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
+Phase 3 — Observability    [███░░░░░░░]  4/13  (31%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 Phase 6 — Frontend         [░░░░░░░░░░]  0/8   (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Completed 2.7 strict TypeScript in all 5 services | **Date:** 2026-09-08
+**Last action completed:** Completed 3.1 structured logging (Pino) in all 5 services | **Date:** 2026-09-08
 
 ---
 
@@ -168,10 +168,10 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 ## Phase 3 — Observability (Logging, Tracing, Docs)
 
 ### 3.1 Replace console.log with structured logging
-- [ ] Install `@nestjs/pino` + `pino-pretty` (dev) in all 3 services
-- [ ] Register `LoggerModule.forRoot()` in each `AppModule`
-- [ ] Replace all `console.log()` calls with `this.logger.log()` / `.warn()` / `.error()`
-- [ ] Ensure logs are JSON-formatted in production, pretty-printed in development (via `NODE_ENV`)
+- [x] Install `nestjs-pino` + `pino-pretty` (dev) in all 5 services (action items said `@nestjs/pino` — wrong name, real package is `nestjs-pino` v5)
+- [x] Register `LoggerModule.forRootAsync()` in each `AppModule` (level by `NODE_ENV`: JSON/`info` prod, pretty/`debug` dev, `silent` test; redact auth/password fields; `/health*` excluded from request logs)
+- [x] Replace all `console.log()` calls with `this.logger.log()` / `.warn()` / `.error()` (existing Nest `Logger` calls became structured with zero edits; bootstrap lines converted; `seed.ts` CLI intentionally left out)
+- [x] Ensure logs are JSON-formatted in production, pretty-printed in development (via `NODE_ENV`) — verified live in all 5 containers
 
 ### 3.2 Add correlation IDs across services
 - [ ] In orders-service (HTTP entry point):

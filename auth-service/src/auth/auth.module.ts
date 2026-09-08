@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { LoggerModule } from 'nestjs-pino';
 import Joi from 'joi';
 import { DbService } from '../db/db.service';
 import { AuthController } from './auth.controller';
@@ -25,6 +26,33 @@ import { ConsulService } from '../consul/consul.service';
           .valid('development', 'production', 'test')
           .default('development'),
       }),
+    }),
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const nodeEnv = configService.get<string>('NODE_ENV', 'development');
+        const isProd = nodeEnv === 'production';
+        return {
+          pinoHttp: {
+            level: nodeEnv === 'test' ? 'silent' : isProd ? 'info' : 'debug',
+            transport: isProd
+              ? undefined
+              : {
+                  target: 'pino-pretty',
+                  options: { singleLine: true },
+                },
+            redact: [
+              'req.headers.authorization',
+              '*.password',
+              '*.passwordHash',
+            ],
+          },
+          exclude: [
+            { method: RequestMethod.ALL, path: 'health' },
+            { method: RequestMethod.ALL, path: 'health/readiness' },
+          ],
+        };
+      },
     }),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({

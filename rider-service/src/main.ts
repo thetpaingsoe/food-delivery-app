@@ -5,6 +5,7 @@ import { AllRpcExceptionsFilter } from './common/filters/all-rpc-exception.filte
 import { Logger } from '@nestjs/common';
 import { HealthModule } from './health/health.module';
 import { ConfigService } from '@nestjs/config';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import { ConsulService } from './consul/consul.service';
 
 async function bootstrap() {
@@ -26,6 +27,7 @@ async function bootstrap() {
   );
 
   microservice.useGlobalFilters(new AllRpcExceptionsFilter());
+  microservice.useLogger(microservice.get(PinoLogger));
 
   await microservice.listen();
   const logger = new Logger('Bootstrap');
