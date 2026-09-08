@@ -16,11 +16,11 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `53 / 89 items completed (60%)`
+**Overall:** `58 / 89 items completed (65%)`
 
 ```
 Phase 1 — Foundation       [██████████]  33/33  (100%)
-Phase 2 — Operations       [██████░░░░]  14/20 (70%)
+Phase 2 — Operations       [█████████░]  19/20 (95%)
 Phase 3 — Observability    [░░░░░░░░░░]  0/13  (0%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Fixed health module dependency injection for standalone health apps | **Date:** 2026-09-05
+**Last action completed:** Completed 2.6 service discovery (Consul + registration x5 + orders→item dynamic lookup) | **Date:** 2026-09-08
 
 ---
 
@@ -151,11 +151,11 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 - [x] Create Docker setup documentation
 
 ### 2.6 Service Discovery
-- [ ] Set up Consul or DNS-based service discovery in Docker
-- [ ] Each service registers itself on startup with name + host + port
-- [ ] orders-service discovers item-service dynamically instead of hardcoded URL
-- [ ] Add health check registration for each service
-- [ ] Handle service deregistration on shutdown
+- [x] Set up Consul or DNS-based service discovery in Docker (`consul` dev agent in docker-compose.yml, API :8500, DNS :8600)
+- [x] Each service registers itself on startup with name + host + port (`ConsulService` in all 5 services, ID = name + hostname, register after listen)
+- [x] orders-service discovers item-service dynamically instead of hardcoded URL (`DiscoveryService`: 10s cache, random pick, `ITEM_SERVICE_URL` fallback, invalidate on connection failure)
+- [x] Add health check registration for each service (HTTP checks on `/health`, 10s interval, `DeregisterCriticalServiceAfter: 1m`)
+- [x] Handle service deregistration on shutdown (`onModuleDestroy` + shutdown hooks; added missing `enableShutdownHooks()` to auth-service)
 
 ### 2.7 Enable strict TypeScript
 - [ ] In all 5 `tsconfig.json` files:

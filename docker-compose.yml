@@ -38,6 +38,7 @@ services:
       PORT: 3000
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      CONSUL_URL: http://consul:8500
       NODE_ENV: production
     depends_on:
       rabbitmq:
@@ -77,6 +78,7 @@ services:
       PORT: 3002
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
       ITEM_SERVICE_URL: http://item-service:3001
+      CONSUL_URL: http://consul:8500
       NODE_ENV: production
     depends_on:
       rabbitmq:
@@ -98,6 +100,7 @@ services:
       DATABASE_URL: ${KITCHEN_DATABASE_URL}
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
       HEALTH_PORT: 3010
+      CONSUL_URL: http://consul:8500
       NODE_ENV: production
     depends_on:
       rabbitmq:
@@ -117,6 +120,7 @@ services:
       DATABASE_URL: ${RIDER_DATABASE_URL}
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
       HEALTH_PORT: 3011
+      CONSUL_URL: http://consul:8500
       NODE_ENV: production
     depends_on:
       rabbitmq:

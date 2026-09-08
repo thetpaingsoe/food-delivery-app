@@ -7,6 +7,7 @@ import { AllRpcExceptionsFilter } from './common/filters/all-rpc-exception.filte
 import { Logger } from '@nestjs/common';
 import { HealthModule } from './health/health.module';
 import { ConfigService } from '@nestjs/config';
+import { ConsulService } from './consul/consul.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,6 +32,7 @@ async function bootstrap() {
   logger.log('Kitchen service listening on kitchen_queue');
 
   microservice.enableShutdownHooks();
+  await app.get(ConsulService).register();
 
   const healthApp = await NestFactory.create(HealthModule);
   const healthPort = configService.get<number>('HEALTH_PORT', 3010);

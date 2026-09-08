@@ -3,6 +3,7 @@ import { AppModule } from './orders/app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { ConsulService } from './consul/consul.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,5 +25,6 @@ async function bootstrap() {
   logger.log(`Orders service running on port ${port}`);
 
   app.enableShutdownHooks();
+  await app.get(ConsulService).register();
 }
 bootstrap();

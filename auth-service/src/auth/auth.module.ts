@@ -6,6 +6,7 @@ import { DbService } from '../db/db.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { HealthModule } from '../health/health.module';
+import { ConsulService } from '../consul/consul.service';
 
 @Module({
   imports: [
@@ -17,6 +18,9 @@ import { HealthModule } from '../health/health.module';
         PORT: Joi.number().default(3000),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRES_IN: Joi.string().default('7d'),
+        CONSUL_URL: Joi.string().default('http://localhost:8500'),
+        SERVICE_NAME: Joi.string().default('auth-service'),
+        SERVICE_ADDRESS: Joi.string().default('auth-service'),
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')
           .default('development'),
@@ -34,6 +38,6 @@ import { HealthModule } from '../health/health.module';
     HealthModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, DbService],
+  providers: [AuthService, DbService, ConsulService],
 })
 export class AppModule {}

@@ -11,6 +11,8 @@ import { firstValueFrom, timeout } from 'rxjs';
 import { orders } from '../db/schema';
 import { DbService } from '../db/db.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { DiscoveryService } from '../consul/discovery.service';
+import { ConfigService } from '@nestjs/config';
 
 interface MenuItem {
   id: string;
@@ -26,6 +28,8 @@ export class AppService {
     @Inject('KITCHEN_SERVICE') private readonly kitchenClient: ClientProxy,
     private readonly dbService: DbService,
     private readonly httpService: HttpService,
+    private readonly discovery: DiscoveryService,
+    private readonly configService: ConfigService,
   ) {}
 
   async createOrder(dto: CreateOrderDto) {
@@ -81,12 +85,23 @@ export class AppService {
   }
 
   private async fetchItem(menuItemId: string): Promise<MenuItem> {
+    const fallback = this.configService.get<string>(
+      'ITEM_SERVICE_URL',
+      'http://localhost:3001',
+    );
+    const baseUrl = await this.discovery.getServiceUrl(
+      'item-service',
+      fallback,
+    );
     try {
       const response = await firstValueFrom(
-        this.httpService.get<MenuItem>(`/items/${menuItemId}`),
+        this.httpService.get<MenuItem>(`${baseUrl}/items/${menuItemId}`),
       );
       return response.data;
-    } catch {
+    } catch (error) {
+      if (!(error as any)?.response) {
+        this.discovery.invalidate('item-service');
+      }
       throw new NotFoundException(`Menu item with ID ${menuItemId} not found`);
     }
   }

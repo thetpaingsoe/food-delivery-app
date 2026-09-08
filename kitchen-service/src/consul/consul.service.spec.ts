@@ -23,7 +23,7 @@ describe('ConsulService', () => {
     it('PUTs the service definition to the agent register endpoint', async () => {
       fetchSpy.mockResolvedValue({ ok: true } as Response);
       const service = new ConsulService(
-        stubConfig({ PORT: 3001, CONSUL_URL: 'http://consul:8500' }),
+        stubConfig({ SERVICE_PORT: 3010, CONSUL_URL: 'http://consul:8500' }),
       );
 
       await service.register();
@@ -36,13 +36,13 @@ describe('ConsulService', () => {
       expect(init.method).toBe('PUT');
       const body = JSON.parse(init.body);
       expect(body).toMatchObject({
-        Name: 'item-service',
-        Address: 'item-service',
-        Port: 3001,
+        Name: 'kitchen-service',
+        Address: 'kitchen-service',
+        Port: 3010,
       });
-      expect(body.ID).toMatch(/^item-service-.+/);
+      expect(body.ID).toMatch(/^kitchen-service-.+/);
       expect(body.Check).toMatchObject({
-        HTTP: 'http://item-service:3001/health',
+        HTTP: 'http://kitchen-service:3010/health',
         Interval: '10s',
       });
     });
@@ -57,7 +57,7 @@ describe('ConsulService', () => {
 
       const body = JSON.parse(fetchSpy.mock.calls[0][1].body);
       expect(body.Port).toBe(3010);
-      expect(body.Check.HTTP).toBe('http://item-service:3010/health');
+      expect(body.Check.HTTP).toBe('http://kitchen-service:3010/health');
     });
 
     it('falls back to localhost defaults when config is missing', async () => {

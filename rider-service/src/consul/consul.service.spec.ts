@@ -23,7 +23,7 @@ describe('ConsulService', () => {
     it('PUTs the service definition to the agent register endpoint', async () => {
       fetchSpy.mockResolvedValue({ ok: true } as Response);
       const service = new ConsulService(
-        stubConfig({ PORT: 3001, CONSUL_URL: 'http://consul:8500' }),
+        stubConfig({ SERVICE_PORT: 3011, CONSUL_URL: 'http://consul:8500' }),
       );
 
       await service.register();
@@ -36,13 +36,13 @@ describe('ConsulService', () => {
       expect(init.method).toBe('PUT');
       const body = JSON.parse(init.body);
       expect(body).toMatchObject({
-        Name: 'item-service',
-        Address: 'item-service',
-        Port: 3001,
+        Name: 'rider-service',
+        Address: 'rider-service',
+        Port: 3011,
       });
-      expect(body.ID).toMatch(/^item-service-.+/);
+      expect(body.ID).toMatch(/^rider-service-.+/);
       expect(body.Check).toMatchObject({
-        HTTP: 'http://item-service:3001/health',
+        HTTP: 'http://rider-service:3011/health',
         Interval: '10s',
       });
     });
@@ -50,14 +50,14 @@ describe('ConsulService', () => {
     it('prefers SERVICE_PORT over PORT when set', async () => {
       fetchSpy.mockResolvedValue({ ok: true } as Response);
       const service = new ConsulService(
-        stubConfig({ PORT: 3000, SERVICE_PORT: 3010 }),
+        stubConfig({ PORT: 3000, SERVICE_PORT: 3011 }),
       );
 
       await service.register();
 
       const body = JSON.parse(fetchSpy.mock.calls[0][1].body);
-      expect(body.Port).toBe(3010);
-      expect(body.Check.HTTP).toBe('http://item-service:3010/health');
+      expect(body.Port).toBe(3011);
+      expect(body.Check.HTTP).toBe('http://rider-service:3011/health');
     });
 
     it('falls back to localhost defaults when config is missing', async () => {

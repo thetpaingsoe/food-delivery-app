@@ -11,7 +11,7 @@ export class ConsulService implements OnModuleDestroy {
   constructor(private readonly configService: ConfigService) {
     const name = this.configService.get<string>(
       'SERVICE_NAME',
-      'item-service',
+      'auth-service',
     );
     this.serviceId = `${name}-${hostname()}`;
   }
@@ -26,11 +26,11 @@ export class ConsulService implements OnModuleDestroy {
   async register(): Promise<void> {
     const name = this.configService.get<string>(
       'SERVICE_NAME',
-      'item-service',
+      'auth-service',
     );
     const port =
       this.configService.get<number>('SERVICE_PORT') ??
-      this.configService.get<number>('PORT', 3001);
+      this.configService.get<number>('PORT', 3000);
     const address = this.configService.get<string>(
       'SERVICE_ADDRESS',
       name,
