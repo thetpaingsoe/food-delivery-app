@@ -15,6 +15,13 @@
       "when": 1788015493113,
       "tag": "0001_jittery_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788969974670,
+      "tag": "0002_sloppy_shatterstar",
+      "breakpoints": true
     }
   ]
 }

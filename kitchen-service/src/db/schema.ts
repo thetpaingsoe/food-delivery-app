@@ -15,6 +15,7 @@ export const tickets = pgTable('tickets', {
   street: varchar('street', { length: 255 }).notNull(),
   area: varchar('area', { length: 255 }).notNull(),
   status: varchar('status', { length: 50 }).notNull().default('received'),
+  correlationId: varchar('correlation_id', { length: 36 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
 

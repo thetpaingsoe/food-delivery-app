@@ -17,6 +17,7 @@ export const dispatches = pgTable('dispatches', {
   riderStatus: varchar('status', { length: 50 })
     .notNull()
     .default('dispatched'),
+  correlationId: varchar('correlation_id', { length: 36 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
 

@@ -16,13 +16,13 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `64 / 89 items completed (72%)`
+**Overall:** `64 / 94 items completed (68%)`
 
 ```
 Phase 1 — Foundation       [██████████]  33/33  (100%)
 Phase 2 — Operations       [██████████]  20/20 (100%)
 Phase 3 — Observability    [███░░░░░░░]  4/13  (31%)
-Phase 4 — Resilience       [░░░░░░░░░░]  0/15  (0%)
+Phase 4 — Resilience       [░░░░░░░░░░]  0/20  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 Phase 6 — Frontend         [░░░░░░░░░░]  0/8   (0%)
 Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Completed 3.1 structured logging (Pino) in all 5 services | **Date:** 2026-09-08
+**Last action completed:** Added 4.6 Consul ghost-prevention plan | **Date:** 2026-09-09
 
 ---
 
@@ -224,6 +224,13 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 - [ ] Add `cancelled` status to order status enum
 - [ ] Add compensation logging for observability
 - [ ] Handle partial failures (e.g., kitchen succeeds but rider fails)
+
+### 4.6 Harden Consul registration (ghost prevention)
+- [ ] Point health-check URLs at the container hostname (`os.hostname()`), keep `Address` as the shared Compose name — dead incarnations go critical instead of borrowing successors' heartbeats
+- [ ] Add `depends_on: consul (service_healthy)` in compose for deterministic boot ordering
+- [ ] Add 60s re-registration heartbeat in `ConsulService` (unref'd timer, cleared in `onModuleDestroy`) + fake-timer unit tests per service — covers agent-amnesia, not ghosts
+- [ ] Timed recreate test proving `onModuleDestroy` deregistration completes inside Docker's stop grace
+- [ ] Ghost-scenario verification: recreate a container, old ID goes critical and is purged via `DeregisterCriticalServiceAfter` with zero manual calls
 
 ---
 

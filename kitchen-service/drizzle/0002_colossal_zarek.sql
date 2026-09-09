@@ -1,0 +1,1 @@
+ALTER TABLE "tickets" ADD COLUMN "correlation_id" varchar(36);

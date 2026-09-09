@@ -13,6 +13,10 @@ import { DbService } from '../db/db.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { DiscoveryService } from '../consul/discovery.service';
 import { ConfigService } from '@nestjs/config';
+import {
+  correlationStorage,
+  resolveCorrelationId,
+} from '../correlation/correlation.storage';
 
 interface MenuItem {
   id: string;
@@ -36,6 +40,9 @@ export class AppService {
     const item = await this.fetchItem(dto.menuItemId);
 
     const totalPrice = item.price * dto.quantity;
+    const { correlationId } = resolveCorrelationId(
+      correlationStorage.getStore()?.correlationId,
+    );
 
     let order;
     try {
@@ -51,6 +58,7 @@ export class AppService {
           street: dto.street,
           area: dto.area,
           status: 'pending',
+          correlationId,
         })
         .returning();
     } catch (error) {
@@ -70,6 +78,7 @@ export class AppService {
             quantity: order.quantity,
             street: order.street,
             area: order.area,
+            correlationId,
           })
           .pipe(timeout(5000)),
       );

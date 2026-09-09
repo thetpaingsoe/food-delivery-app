@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DbService } from '../db/db.service';
 import { ConsulService } from '../consul/consul.service';
+import { correlationStorage } from '../correlation/correlation.storage';
 
 @Module({
   imports: [
@@ -31,6 +32,10 @@ import { ConsulService } from '../consul/consul.service';
         const isProd = nodeEnv === 'production';
         return {
           pinoHttp: {
+            mixin: () => {
+              const store = correlationStorage.getStore();
+              return store ? { correlationId: store.correlationId } : {};
+            },
             level: nodeEnv === 'test' ? 'silent' : isProd ? 'info' : 'debug',
             transport: isProd
               ? undefined

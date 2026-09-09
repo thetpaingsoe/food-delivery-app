@@ -18,6 +18,7 @@ export const orders = pgTable('orders', {
   street: varchar('street', { length: 255 }).notNull(),
   area: varchar('area', { length: 255 }).notNull(),
   status: varchar('status', { length: 50 }).notNull().default('pending'),
+  correlationId: varchar('correlation_id', { length: 36 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
 

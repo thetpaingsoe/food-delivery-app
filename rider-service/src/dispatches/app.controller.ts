@@ -1,6 +1,10 @@
 import { Controller, Logger } from '@nestjs/common';
 import { AppService } from './app.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
+import {
+  correlationStorage,
+  resolveCorrelationId,
+} from '../correlation/correlation.storage';
 
 @Controller()
 export class AppController {
@@ -18,10 +22,21 @@ export class AppController {
       quantity: number;
       street: string;
       area: string;
+      correlationId?: string;
     },
   ) {
+    const { correlationId, minted } = resolveCorrelationId(
+      data.correlationId,
+    );
+    if (minted) {
+      this.logger.warn(
+        `No correlationId in order_ready for order ${data.orderId}, minted ${correlationId}`,
+      );
+    }
     this.logger.log('Rider received dispatch for order : ' + data.orderId);
 
-    await this.appService.dispatchRider(data);
+    await correlationStorage.run({ correlationId }, () =>
+      this.appService.dispatchRider({ ...data, correlationId }),
+    );
   }
 }

@@ -1,6 +1,13 @@
-import { Module, RequestMethod } from '@nestjs/common';
+import {
+  Module,
+  RequestMethod,
+  NestModule,
+  MiddlewareConsumer,
+} from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { LoggerModule } from 'nestjs-pino';
+import { CorrelationMiddleware } from '../correlation/correlation.middleware';
+import { correlationStorage } from '../correlation/correlation.storage';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -35,6 +42,10 @@ import { DiscoveryService } from '../consul/discovery.service';
         const isProd = nodeEnv === 'production';
         return {
           pinoHttp: {
+            mixin: () => {
+              const store = correlationStorage.getStore();
+              return store ? { correlationId: store.correlationId } : {};
+            },
             level: nodeEnv === 'test' ? 'silent' : isProd ? 'info' : 'debug',
             transport: isProd
               ? undefined
@@ -83,4 +94,8 @@ import { DiscoveryService } from '../consul/discovery.service';
   controllers: [AppController],
   providers: [AppService, DbService, ConsulService, DiscoveryService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(CorrelationMiddleware).forRoutes('*');
+  }
+}

@@ -20,6 +20,7 @@ export class AppService {
     quantity: number;
     street: string;
     area: string;
+    correlationId: string;
   }) {
     let ticket;
     try {
@@ -33,6 +34,7 @@ export class AppService {
           street: data.street,
           area: data.area,
           status: 'received',
+          correlationId: data.correlationId,
         })
         .returning();
     } catch (error) {
@@ -57,6 +59,7 @@ export class AppService {
             quantity: data.quantity,
             street: data.street,
             area: data.area,
+            correlationId: data.correlationId,
           })
           .pipe(timeout(5000)),
       );

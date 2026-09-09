@@ -15,6 +15,13 @@
       "when": 1788016851910,
       "tag": "0001_damp_vision",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788969974384,
+      "tag": "0002_colossal_zarek",
+      "breakpoints": true
     }
   ]
 }

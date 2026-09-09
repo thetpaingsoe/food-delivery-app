@@ -16,6 +16,7 @@ export class AppService {
     quantity: number;
     street: string;
     area: string;
+    correlationId: string;
   }) {
     const rider = RIDERS[Math.floor(Math.random() * RIDERS.length)];
 
@@ -31,6 +32,7 @@ export class AppService {
           street: data.street,
           area: data.area,
           riderStatus: 'dispatched',
+          correlationId: data.correlationId,
         })
         .returning();
     } catch (error) {
