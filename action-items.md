@@ -16,12 +16,12 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `64 / 94 items completed (68%)`
+**Overall:** `68 / 94 items completed (72%)`
 
 ```
 Phase 1 — Foundation       [██████████]  33/33  (100%)
 Phase 2 — Operations       [██████████]  20/20 (100%)
-Phase 3 — Observability    [███░░░░░░░]  4/13  (31%)
+Phase 3 — Observability    [██████░░░░]  8/13  (62%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/20  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
 Phase 6 — Frontend         [░░░░░░░░░░]  0/8   (0%)
@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Added 4.6 Consul ghost-prevention plan | **Date:** 2026-09-09
+**Last action completed:** Completed 3.2 correlation IDs (persisted, orders→kitchen→rider) | **Date:** 2026-09-10
 
 ---
 
@@ -174,15 +174,15 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 - [x] Ensure logs are JSON-formatted in production, pretty-printed in development (via `NODE_ENV`) — verified live in all 5 containers
 
 ### 3.2 Add correlation IDs across services
-- [ ] In orders-service (HTTP entry point):
-  - Create middleware that generates a `correlationId` (UUID) for each incoming request
+- [x] In orders-service (HTTP entry point):
+  - Create middleware that generates a `correlationId` (UUID) for each incoming request (mints or honors incoming, echoes in response header)
   - Attach it to `req.headers['x-correlation-id']`
-  - Inject it into logger context
-- [ ] Pass `correlationId` in RMQ message payloads
-- [ ] In kitchen-service and rider-service:
-  - Read `correlationId` from incoming RMQ messages
-  - Set it on the logger context for traceability
-- [ ] This lets you trace a single order through all 3 services
+  - Inject it into logger context (AsyncLocalStorage + pino `mixin`, zero call-site changes)
+- [x] Pass `correlationId` in RMQ message payloads (`order_created` → `order_ready`)
+- [x] In kitchen-service and rider-service:
+  - Read `correlationId` from incoming RMQ messages (warn-and-mint fallback when absent)
+  - Set it on the logger context for traceability (`als.run` handler wrap)
+- [x] This lets you trace a single order through all 3 services (verified live: one ID in 3 DB rows + 3 log streams; column persisted as nullable `varchar(36)`, no backfill; auth/item also honor `x-correlation-id` in middleware + logs, no persistence there)
 
 ### 3.3 Add Swagger/OpenAPI docs
 - [ ] Install `@nestjs/swagger` in orders-service

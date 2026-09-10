@@ -1,7 +1,14 @@
-import { Module, RequestMethod } from '@nestjs/common';
+import {
+  Module,
+  RequestMethod,
+  NestModule,
+  MiddlewareConsumer,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { LoggerModule } from 'nestjs-pino';
+import { CorrelationMiddleware } from '../correlation/correlation.middleware';
+import { correlationStorage } from '../correlation/correlation.storage';
 import Joi from 'joi';
 import { DbService } from '../db/db.service';
 import { AuthController } from './auth.controller';
@@ -34,6 +41,10 @@ import { ConsulService } from '../consul/consul.service';
         const isProd = nodeEnv === 'production';
         return {
           pinoHttp: {
+            mixin: () => {
+              const store = correlationStorage.getStore();
+              return store ? { correlationId: store.correlationId } : {};
+            },
             level: nodeEnv === 'test' ? 'silent' : isProd ? 'info' : 'debug',
             transport: isProd
               ? undefined
@@ -68,4 +79,8 @@ import { ConsulService } from '../consul/consul.service';
   controllers: [AuthController],
   providers: [AuthService, DbService, ConsulService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(CorrelationMiddleware).forRoutes('*');
+  }
+}
