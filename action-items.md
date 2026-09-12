@@ -30,7 +30,7 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Scaffolded main/frontend (Vite+React+TS, Tailwind v4, Router, Query+Zustand) + login page with guarded blank home | **Date:** 2026-09-12
+**Last action completed:** User roles (admin/kitchen/rider/customer) + AdminGuard on item mutations + 4 seeded users + client/admin layout shells with role gating | **Date:** 2026-09-12
 
 ---
 

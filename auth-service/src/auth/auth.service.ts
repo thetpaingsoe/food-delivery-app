@@ -52,12 +52,13 @@ export class AuthService {
       throw new BadGatewayException('Could not create the account');
     }
 
-    const token = this.signToken(created.id, created.email);
+    const token = this.signToken(created.id, created.email, created.role);
 
     return {
       id: created.id,
       name: created.name,
       email: created.email,
+      role: created.role,
       token,
     };
   }
@@ -79,13 +80,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const token = this.signToken(user.id, user.email);
+    const token = this.signToken(user.id, user.email, user.role);
 
     this.logger.log('Logged In', user.name);
     return {
       id: user.id,
       name: user.name,
       email: user.email,
+      role: user.role,
       token,
     };
   }
@@ -93,15 +95,15 @@ export class AuthService {
   async verifyToken(token: string) {
     try {
       const payload = this.jwtService.verify(token);
-      return { userId: payload.sub, email: payload.email };
+      return { userId: payload.sub, email: payload.email, role: payload.role };
     } catch {
       throw new UnauthorizedException('Invalid token');
     }
   }
 
-  private signToken(userId: string, email: string): string {
+  private signToken(userId: string, email: string, role: string): string {
     return this.jwtService.sign(
-      { sub: userId, email },
+      { sub: userId, email, role },
       {
         expiresIn: this.configService.get<string>(
           'JWT_EXPIRES_IN',

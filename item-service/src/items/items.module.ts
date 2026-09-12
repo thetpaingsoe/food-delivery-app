@@ -11,7 +11,7 @@ import { CorrelationMiddleware } from '../correlation/correlation.middleware';
 import { correlationStorage } from '../correlation/correlation.storage';
 import Joi from 'joi';
 import { DbService } from '../db/db.service';
-import { AuthGuard } from '../auth/auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
 import { ItemsController } from './items.controller';
 import { ItemsService } from './items.service';
 import { HealthModule } from '../health/health.module';
@@ -78,7 +78,7 @@ import { ConsulService } from '../consul/consul.service';
     HealthModule,
   ],
   controllers: [ItemsController],
-  providers: [ItemsService, DbService, AuthGuard, ConsulService],
+  providers: [ItemsService, DbService, AdminGuard, ConsulService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

@@ -31,12 +31,12 @@ export function Login() {
       const res = await login(values.email, values.password);
       dispatch(
         setSession({
-          user: { id: res.id, name: res.name, email: res.email },
+          user: { id: res.id, name: res.name, email: res.email, role: res.role },
           token: res.token,
         }),
       );
       toast.success(`Welcome back, ${res.name}`);
-      navigate("/", { replace: true });
+      navigate(res.role === "admin" ? "/admin" : "/", { replace: true });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Login failed");
     }

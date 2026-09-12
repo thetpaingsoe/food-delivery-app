@@ -61,7 +61,17 @@ See [docker-setup.md](./docs/docker-setup.md) for full instructions.
 1. Create databases and roles — see [database-setup.md](./docs/database-setup.md)
 2. Configure `.env` for each service
 3. Run migrations: `pnpm db:migrate`
-4. Start dev server: `pnpm start:dev`
+4. Seed test users: `pnpm db:seed` (in `auth-service/`)
+5. Start dev server: `pnpm start:dev`
+
+Seeded logins (passwords pass the backend rule):
+
+| Email | Password | Role |
+|-------|----------|------|
+| admin@swiftbite.local | Admin123! | admin |
+| kitchen@swiftbite.local | Kitchen123! | kitchen |
+| rider@swiftbite.local | Rider123! | rider |
+| customer@swiftbite.local | Customer123! | customer |
 
 ## Testing
 

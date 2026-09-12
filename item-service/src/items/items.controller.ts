@@ -15,7 +15,7 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { AuthGuard } from '../auth/auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
 
 @Controller()
 export class ItemsController {
@@ -27,13 +27,13 @@ export class ItemsController {
   }
 
   @Post('categories')
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   createCategory(@Body() dto: CreateCategoryDto) {
     return this.itemsService.createCategory(dto);
   }
 
   @Patch('categories/:id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   updateCategory(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateCategoryDto,
@@ -42,7 +42,7 @@ export class ItemsController {
   }
 
   @Delete('categories/:id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   deleteCategory(@Param('id', ParseUUIDPipe) id: string) {
     return this.itemsService.deleteCategory(id);
   }
@@ -58,13 +58,13 @@ export class ItemsController {
   }
 
   @Post('items')
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   createItem(@Body() dto: CreateItemDto) {
     return this.itemsService.createItem(dto);
   }
 
   @Patch('items/:id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   updateItem(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateItemDto,
@@ -73,7 +73,7 @@ export class ItemsController {
   }
 
   @Delete('items/:id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   deleteItem(@Param('id', ParseUUIDPipe) id: string) {
     return this.itemsService.deleteItem(id);
   }

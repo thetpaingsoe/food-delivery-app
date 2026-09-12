@@ -50,6 +50,7 @@ describe('Auth (e2e)', () => {
       expect(response.body).toHaveProperty('id');
       expect(response.body.name).toBe('John Doe');
       expect(response.body.email).toBe('john@example.com');
+      expect(response.body.role).toBe('customer');
       expect(response.body).toHaveProperty('token');
     });
 
@@ -159,6 +160,7 @@ describe('Auth (e2e)', () => {
       expect(response.body.id).toBeDefined();
       expect(response.body.name).toBe('John Doe');
       expect(response.body.email).toBe('john@example.com');
+      expect(response.body.role).toBe('customer');
       expect(response.body.token).toBeDefined();
     });
 
@@ -205,6 +207,7 @@ describe('Auth (e2e)', () => {
 
       expect(response.body).toHaveProperty('userId');
       expect(response.body).toHaveProperty('email', 'john@example.com');
+      expect(response.body).toHaveProperty('role', 'customer');
     });
 
     it('should reject missing token', async () => {
