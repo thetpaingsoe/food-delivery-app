@@ -15,8 +15,9 @@
 | docs/*.md | Setup guides | When setting up something new |
 
 ## Who I Am
-I am an OpenCode AI coding assistant helping build a food delivery app with NestJS 11 microservices.
+I am an OpenCode AI coding assistant helping build SwiftBite (food delivery) with NestJS 11 microservices.
 I operate as a senior backend engineer — I teach, explain, provide worked examples, and implement production-ready patterns.
+This is a learning/portfolio project (not production) — favor teaching value and pattern breadth over operational minimalism.
 
 ## Communication Style
 - Short, direct, no fluff
@@ -30,19 +31,21 @@ I operate as a senior backend engineer — I teach, explain, provide worked exam
 - **grill-me**: Use when sharpening a plan or design. Relentless interview mode.
 
 ## Tech Stack
-NestJS 11 / TypeScript 5.7 / Drizzle ORM / Neon Postgres / RabbitMQ / Jest + supertest
+NestJS 11 / TypeScript 5.7 strict / Drizzle ORM / Neon Postgres / RabbitMQ / Consul / Pino / Jest + supertest / pnpm / Docker Compose
 
 ## Services
 | Service | Database | Port | Status |
 |---------|----------|------|--------|
-| auth-service | auth_db | 3000 | ✅ Done (tests pass) |
-| item-service | item_db | 3001 | ✅ Done |
-| orders-service | orders_db | 3002 | Pending |
-| kitchen-service | kitchen_db | — | Pending |
-| rider-service | rider_db | — | Pending |
+| auth-service | auth_db | 3000 | ✅ Done (health, Consul, Pino, correlation honor, strict) |
+| item-service | item_db | 3001 | ✅ Done (health, Consul, Pino, correlation honor, strict) |
+| orders-service | orders_db | 3002 | ✅ Done (+ Consul discovery w/ fallback, correlation middleware + persist) |
+| kitchen-service | kitchen_db | RMQ + health :3010 | ✅ Done (+ Consul, Pino, correlation forward + persist) |
+| rider-service | rider_db | RMQ + health :3011 | ✅ Done (+ Consul, Pino, correlation persist) |
+| consul | — | 8500/8600 | ✅ Dev agent in compose |
+| rabbitmq | — | 5672/15672 | ✅ |
 
 ## Current Task
-Phase 1 — next service (orders-service, kitchen-service, or rider-service)
+Phase 6 — frontend started (login + guarded blank home done, register next). Backend 3.3 Swagger + Phase 4/5 still open. See action-items.md (73/94).
 
 ## Conventions
 - Feature tests over unit tests (every change production-ready)
@@ -53,3 +56,8 @@ Phase 1 — next service (orders-service, kitchen-service, or rider-service)
 - No `baseUrl` in tsconfig (deprecated)
 - DTOs use `!` definite assignment assertion
 - Docs in `main/docs/`, index in `main/README.md`
+- Real package is `nestjs-pino` v5 (action-items once said `@nestjs/pino` — wrong)
+- Consul patterns: register after `listen()`, deregister in `onModuleDestroy`, ID = name + hostname; orders discovers item-service via `DiscoveryService` (10s cache, env fallback)
+- Correlation: ALS + pino `mixin`, mint-or-honor middleware, persisted `correlation_id` on orders/tickets/dispatches only
+- Study notes live in user's second brain, NOT in `docs/` — only project-operational docs stay in repo
+- Docker Desktop may be down at session start — check daemon before compose commands

@@ -16,7 +16,7 @@
 
 ## 📊 Progress Tracker
 
-**Overall:** `68 / 94 items completed (72%)`
+**Overall:** `73 / 94 items completed (78%)`
 
 ```
 Phase 1 — Foundation       [██████████]  33/33  (100%)
@@ -24,13 +24,13 @@ Phase 2 — Operations       [██████████]  20/20 (100%)
 Phase 3 — Observability    [██████░░░░]  8/13  (62%)
 Phase 4 — Resilience       [░░░░░░░░░░]  0/20  (0%)
 Phase 5 — Organization     [░░░░░░░░░░]  0/8   (0%)
-Phase 6 — Frontend         [░░░░░░░░░░]  0/8   (0%)
+Phase 6 — Frontend         [█░░░░░░░░░]  1/8   (13%)
 Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 ```
 
 > Update the `#/#` counts and replace `░` with `█` as you complete items.
 
-**Last action completed:** Completed 3.2 correlation IDs (persisted, orders→kitchen→rider) | **Date:** 2026-09-10
+**Last action completed:** Scaffolded main/frontend (Vite+React+TS, Tailwind v4, Router, Query+Zustand) + login page with guarded blank home | **Date:** 2026-09-12
 
 ---
 
@@ -311,17 +311,17 @@ Phase 7 — Integration      [░░░░░░░░░░]  0/4   (0%)
 ## Phase 6 — Frontend (React + Vite + Tailwind)
 
 ### 6.1 Project setup
-- [ ] Create `frontend/` directory with Vite + React + TypeScript
-- [ ] Install Tailwind CSS for styling
-- [ ] Set up React Router for navigation
-- [ ] Configure API proxy to backend services
+- [x] Create `frontend/` directory with Vite + React + TypeScript
+- [x] Install Tailwind CSS for styling
+- [x] Set up React Router for navigation
+- [x] Configure API proxy to backend services
 
 ### 6.2 Auth pages
-- [ ] Build login page (email + password form)
+- [x] Build login page (email + password form)
 - [ ] Build register page (name + email + password form)
-- [ ] Store JWT in localStorage/httpOnly cookie
-- [ ] Add auth context/hook for managing user state
-- [ ] Protected routes: redirect to login if not authenticated
+- [x] Store JWT in localStorage/httpOnly cookie
+- [x] Add auth context/hook for managing user state
+- [x] Protected routes: redirect to login if not authenticated
 
 ### 6.3 Menu browsing
 - [ ] Build menu page with category tabs (Food / Drinks)
