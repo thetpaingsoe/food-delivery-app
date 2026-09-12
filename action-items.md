@@ -1,4 +1,4 @@
-# Food Delivery App — Production Readiness Action Plan
+# QuickBite — Production Readiness Action Plan
 
 **Tech Stack:** NestJS 11 / TypeScript 5.7 / Drizzle ORM / Neon Postgres / RabbitMQ / React (Vite) / Tailwind CSS
 **Recommended Stack:** Pino + Joi + pnpm + Jest

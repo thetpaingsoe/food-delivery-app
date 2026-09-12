@@ -1,4 +1,4 @@
-# Food Delivery App
+# QuickBite
 
 NestJS microservices architecture with Neon Postgres and RabbitMQ.
 
