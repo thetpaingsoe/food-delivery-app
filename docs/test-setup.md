@@ -49,12 +49,12 @@ Key differences from `.env`:
 
 ```bash
 cd auth-service
-npm run db:migrate:test
+pnpm db:migrate:test
 
 cd ../orders-service
-npm run db:migrate:test
+pnpm db:migrate:test
 
-# Repeat for each service
+# Repeat for each service (item, kitchen, rider)
 ```
 
 This reads `.env.test` and migrates the test database only.
@@ -63,7 +63,8 @@ This reads `.env.test` and migrates the test database only.
 
 ```bash
 cd auth-service
-npm run test:e2e
+pnpm test         # unit tests (*.spec.ts, no DB needed)
+pnpm test:e2e     # feature tests (needs test DBs)
 ```
 
 What happens:
@@ -75,10 +76,11 @@ What happens:
 ### Run all services' tests
 
 ```bash
-cd auth-service && npm run test:e2e
-cd ../orders-service && npm run test:e2e
-cd ../kitchen-service && npm run test:e2e
-cd ../rider-service && npm run test:e2e
+cd auth-service && pnpm test:e2e
+cd ../item-service && pnpm test:e2e
+cd ../orders-service && pnpm test:e2e
+cd ../kitchen-service && pnpm test:e2e
+cd ../rider-service && pnpm test:e2e
 ```
 
 ## Troubleshooting
@@ -87,5 +89,5 @@ cd ../rider-service && npm run test:e2e
 |---------|-----|
 | `Config validation error` | Check `NODE_ENV=test` in `.env.test` |
 | Tests hit dev database | Verify `.env.test` points to `_test` database |
-| `relation "users" does not exist` | Run `npm run db:migrate:test` first |
+| `relation "users" does not exist` | Run `pnpm db:migrate:test` first |
 | Port conflict | Stop dev server before running tests |

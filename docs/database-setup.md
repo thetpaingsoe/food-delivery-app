@@ -49,10 +49,15 @@ Copy `.env.example` to `.env` in each service folder and fill in your `DATABASE_
 
 ```bash
 cp auth-service/.env.example auth-service/.env
+cp item-service/.env.example item-service/.env
 cp orders-service/.env.example orders-service/.env
 cp kitchen-service/.env.example kitchen-service/.env
 cp rider-service/.env.example rider-service/.env
 ```
+
+> Docker Compose does **not** use these files — it reads the root `main/.env`
+> (`AUTH_DATABASE_URL`, `ITEM_DATABASE_URL`, …). Per-service `.env` files are for
+> local development (`pnpm start:dev`) and running migrations outside Docker.
 
 Example for auth-service:
 ```
@@ -79,20 +84,26 @@ Each service has its own Drizzle schema. Generate and apply migrations per servi
 
 ```bash
 cd auth-service
-npm run db:generate
-npm run db:migrate
+pnpm db:generate
+pnpm db:migrate
 ```
 
 Repeat for each service after its schema is created.
+
+Workflow: edit `src/db/schema.ts` → `db:generate` (review the emitted SQL — always
+read it) → migrate test DBs first (`db:migrate:test`), then prod (`db:migrate`).
+Rollback is a new migration, never edit an applied one. See
+[database-schema.md](./database-schema.md) for the current tables.
 
 ## 6. Tables created per service
 
 | Service | Table | Purpose |
 |---------|-------|---------|
 | auth-service | `users` | id, name, email, password_hash, created_at |
-| orders-service | `orders` | id, customer_name, item, quantity, status, created_at |
-| kitchen-service | `tickets` | id, order_id, customer_name, item, status, created_at |
-| rider-service | `dispatches` | id, order_id, customer_name, item, rider_status, created_at |
+| item-service | `categories`, `menu_items` | menu catalog + items |
+| orders-service | `orders` | id, customer_name, item snapshot, quantity, total, address, status, correlation_id |
+| kitchen-service | `tickets` | id, order_id, item details, status, correlation_id |
+| rider-service | `dispatches` | id, order_id, item details, status, correlation_id |
 
 ## Notes
 

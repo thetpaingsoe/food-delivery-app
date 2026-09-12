@@ -39,6 +39,7 @@ This starts:
 | Service | Port | Purpose |
 |---------|------|---------|
 | rabbitmq | 5672, 15672 | Message broker |
+| consul | 8500, 8600 | Service discovery (API/UI + DNS) |
 | auth-service | 3000 | User registration/login |
 | item-service | 3001 | Menu browsing |
 | orders-service | 3002 | Order placement |
@@ -132,16 +133,43 @@ main/
 
 Each service has its own `Dockerfile`. The `docker-compose.yml` at the root orchestrates everything.
 
-## Service discovery
+## Service discovery (Consul)
 
-Services communicate via Docker DNS:
+All 5 services self-register with Consul on startup (ID = service name + container
+hostname) with HTTP health checks against their `/health` endpoints, and deregister on
+shutdown. Browse the registry at http://localhost:8500 (Services tab).
 
-- `orders-service` → `http://item-service:3001` (fetches menu items)
-- `orders-service` → `rabbitmq:5672` (emits to kitchen queue)
-- `kitchen-service` → `rabbitmq:5672` (listens on kitchen_queue)
-- `rider-service` → `rabbitmq:5672` (listens on rider_queue)
+- `orders-service` discovers `item-service` dynamically via
+  `GET consul:8500/v1/health/service/item-service?passing=1` (10s cache, random pick).
+  If Consul is unreachable it falls back to `ITEM_SERVICE_URL` — directory outage
+  degrades, never breaks.
+- RabbitMQ traffic still uses Docker DNS (`rabbitmq:5672`).
 
-No hardcoded `localhost` in production — Docker networking handles it.
+Check the catalog:
+
+```bash
+# All registered services
+curl -s http://localhost:8500/v1/catalog/services
+
+# Healthy item-service instances only
+curl -s "http://localhost:8500/v1/health/service/item-service?passing=1"
+```
+
+## Logging
+
+All services log single-line JSON in production (pretty locally, silent in tests).
+Trace one order across every service with its correlation ID:
+
+```bash
+# Place an order with a known ID, then follow it everywhere
+curl -X POST http://localhost:3002/orders \
+  -H 'Content-Type: application/json' -H 'x-correlation-id: debug-1' \
+  -d '{"customerName":"...","menuItemId":"...","quantity":1,"street":"...","area":"..."}'
+
+docker-compose logs --no-log-prefix | grep "debug-1"
+```
+
+See [observability.md](./observability.md) for the full correlation-ID design.
 
 ## Troubleshooting
 
@@ -163,3 +191,25 @@ curl http://localhost:15672
 
 **Port conflicts:**
 If ports 3000-3002 or 3010-3011 are in use, stop local processes or change ports in `docker-compose.yml`.
+
+**Empty Consul catalog after restart:**
+Services register once at boot — if they booted while Consul was down they stay
+unregistered (boot never fails on directory outage, by design). Restart them:
+
+```bash
+docker-compose restart auth-service item-service orders-service kitchen-service rider-service
+```
+
+**Duplicate (ghost) entries in Consul:**
+Recreated containers get new hostnames → new IDs; if the old container's
+deregistration didn't complete, its entry lingers. Compare catalog IDs against live
+hostnames, then remove the stale one:
+
+```bash
+docker inspect --format '{{.Name}} {{.Config.Hostname}}' $(docker-compose ps -q)
+curl -X PUT http://localhost:8500/v1/agent/service/deregister/<stale-id>
+```
+
+**Orders work with Consul stopped:**
+Expected — orders-service falls back to `ITEM_SERVICE_URL`. Check the logs for
+`Discovery fallback for item-service` to confirm the fallback path engaged.
